@@ -8,6 +8,7 @@ import ContactUs from './Pages/Public/ContactUs';
 import Login from './Pages/Public/Login';
 import Registration from './Pages/Public/Registration';
 import ForgotPassword from './Pages/Public/ForgotPassword';
+import VerifyEmail from './Pages/Public/VerifyEmail';
 
 function App() {
   return (
@@ -20,6 +21,7 @@ function App() {
       <Route path="/login" element={<Login />} />
       <Route path="/register" element={<Registration />} />
       <Route path="/forgot-password" element={<ForgotPassword />} />
+      <Route path="/verify-email" element={<VerifyEmail />} />
     </Routes>
   );
 }
