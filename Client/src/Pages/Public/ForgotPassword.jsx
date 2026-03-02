@@ -1,15 +1,16 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import Navbar from '../../components/Navbar';
 import Footer from '../../components/Footer';
 
 export default function ForgotPassword() {
     const navigate = useNavigate();
+    const [email, setEmail] = useState('');
 
     const handleSubmit = (e) => {
         e.preventDefault();
-        // Simply navigate to the next step
-        navigate('/verify-email');
+        // Simply navigate to the next step, passing the email in state
+        navigate('/verify-email', { state: { email } });
     };
 
     return (
@@ -43,7 +44,15 @@ export default function ForgotPassword() {
                                 </label>
                                 <div className="relative">
                                     <span className="material-symbols-outlined absolute left-4 top-1/2 -translate-y-1/2 text-slate-400 text-xl">mail</span>
-                                    <input className="w-full bg-white/5 border border-white/10 rounded-xl-custom pl-12 pr-4 py-4 text-white focus:ring-2 focus:ring-primary focus:border-transparent outline-none transition-all placeholder:text-slate-500 backdrop-blur-sm" id="email" placeholder="name@email.com" type="email" />
+                                    <input
+                                        className="w-full bg-white/5 border border-white/10 rounded-xl-custom pl-12 pr-4 py-4 text-white focus:ring-2 focus:ring-primary focus:border-transparent outline-none transition-all placeholder:text-slate-500 backdrop-blur-sm"
+                                        id="email"
+                                        placeholder="name@email.com"
+                                        type="email"
+                                        value={email}
+                                        onChange={(e) => setEmail(e.target.value)}
+                                        required
+                                    />
                                 </div>
                             </div>
                             <button className="w-full bg-primary hover:bg-electric-blue text-white font-bold h-14 rounded-xl-custom transition-all shadow-xl shadow-blue-500/20 text-lg flex items-center justify-center gap-2" type="submit">

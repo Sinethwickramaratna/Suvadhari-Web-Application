@@ -1,5 +1,5 @@
-import React, { useState, useRef } from 'react';
-import { Link, useNavigate } from 'react-router-dom';
+import React, { useState, useRef, useEffect } from 'react';
+import { Link, useNavigate, useLocation } from 'react-router-dom';
 import Navbar from '../../components/Navbar';
 import Footer from '../../components/Footer';
 
@@ -8,6 +8,44 @@ export default function VerifyEmail() {
     const [code, setCode] = useState(['', '', '', '', '', '']);
     const inputRefs = useRef([]);
     const navigate = useNavigate();
+    const location = useLocation();
+
+    // Get email from navigation state, fallback if directly navigated
+    const email = location.state?.email || 'user@email.com';
+
+    // Timer state
+    const [timer, setTimer] = useState(60);
+    const [canResend, setCanResend] = useState(false);
+
+    useEffect(() => {
+        // Redirect to forgot password if no email is provided
+        if (!location.state?.email) {
+            navigate('/forgot-password', { replace: true });
+        }
+    }, [location, navigate]);
+
+    useEffect(() => {
+        let interval = null;
+        if (timer > 0) {
+            interval = setInterval(() => {
+                setTimer((prev) => prev - 1);
+            }, 1000);
+        } else {
+            setCanResend(true);
+        }
+        return () => {
+            if (interval) clearInterval(interval);
+        };
+    }, [timer]);
+
+    const handleResend = () => {
+        // Logic to actually resend the code would go here
+        console.log('Resending code to', email);
+
+        // Reset timer
+        setTimer(30);
+        setCanResend(false);
+    };
 
     const handleChange = (index, value) => {
         // Only allow numbers
@@ -76,18 +114,18 @@ export default function VerifyEmail() {
                         {/* Header Content */}
                         <h1 className="text-3xl font-bold mb-3 tracking-tight text-secondary font-black">Check Your Email</h1>
                         <p className="text-slate-500 leading-relaxed mb-10 font-medium">
-                            We've sent a 6-digit verification code to <span className="text-secondary font-semibold">user@email.com</span>.
-                            <Link to="/forgot-password" className="text-primary hover:underline ml-1 font-semibold text-sm transition-colors">Change</Link>.
-                            Please enter it below to reset your password.
+                            We've sent a 6-digit verification code to <span className="text-secondary font-semibold">{email}</span>.
+                            <Link to={location.state?.source === 'registration' ? '/register' : '/forgot-password'} state={{ email }} className="text-primary hover:underline ml-1 font-semibold text-sm transition-colors">Change</Link>.
+                            <br /><span className="text-sm mt-1 inline-block">Please enter it below to {location.state?.source === 'registration' ? 'verify your account' : 'reset your password'}.</span>
                         </p>
 
                         <form onSubmit={handleSubmit} className="w-full">
-                            <div className="flex justify-between gap-2 mb-8 w-full">
+                            <div className="flex justify-between gap-1 sm:gap-2 mb-8 w-full">
                                 {code.map((digit, index) => (
                                     <input
                                         key={index}
                                         ref={(el) => inputRefs.current[index] = el}
-                                        className="w-12 h-14 sm:w-14 sm:h-16 text-center text-2xl font-bold border-2 border-slate-200 rounded-xl focus:border-primary focus:ring-primary outline-none transition-all bg-slate-50 focus:bg-white"
+                                        className="w-10 h-12 sm:w-14 sm:h-16 text-center text-xl sm:text-2xl font-bold border-2 border-slate-200 rounded-xl focus:border-primary focus:ring-primary outline-none transition-all bg-slate-50 focus:bg-white"
                                         maxLength="1"
                                         type="text"
                                         value={digit}
@@ -109,17 +147,25 @@ export default function VerifyEmail() {
                                 </button>
 
                                 <button
-                                    className="w-full py-4 px-6 font-bold rounded-xl-custom transition-all flex items-center justify-center gap-2 border border-slate-200 text-secondary hover:bg-slate-50 bg-white"
+                                    className={`w-full py-4 px-6 font-bold rounded-xl-custom transition-all flex items-center justify-center gap-2 border border-slate-200 ${canResend ? 'text-secondary hover:bg-slate-50 bg-white cursor-pointer active:scale-[0.98]' : 'text-slate-400 bg-slate-50 opacity-60 cursor-not-allowed'}`}
                                     type="button"
+                                    onClick={handleResend}
+                                    disabled={!canResend}
                                 >
-                                    <span className="material-symbols-outlined text-xl">refresh</span>
-                                    Resend Code
+                                    <span className={`material-symbols-outlined text-xl ${!canResend && 'opacity-50'}`}>refresh</span>
+                                    {canResend ? 'Resend Code' : `Resend Code (${timer}s)`}
                                 </button>
 
+                                {!canResend && (
+                                    <p className="text-xs text-slate-400 mt-2">
+                                        The button will be re-enabled once the timer reaches zero.
+                                    </p>
+                                )}
+
                                 <div className="pt-4 mt-2">
-                                    <Link className="inline-flex items-center gap-2 font-semibold hover:underline group text-slate-500 hover:text-primary transition-colors" to="/login">
+                                    <Link className="inline-flex items-center gap-2 font-semibold hover:underline group text-slate-500 hover:text-primary transition-colors" to={location.state?.source === 'registration' ? '/register' : '/login'}>
                                         <span className="material-symbols-outlined text-lg transition-transform group-hover:-translate-x-1">arrow_back</span>
-                                        Return to Login
+                                        Return to {location.state?.source === 'registration' ? 'Registration' : 'Login'}
                                     </Link>
                                 </div>
                             </div>
