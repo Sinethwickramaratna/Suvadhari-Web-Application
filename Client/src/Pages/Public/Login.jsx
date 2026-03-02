@@ -33,10 +33,10 @@ export default function Login() {
                                 <span className="material-symbols-outlined text-primary text-lg">person_pin</span>
                                 Select Role
                             </label>
-                            <div className="grid grid-cols-3 gap-2 p-1 bg-slate-50 rounded-xl border border-slate-100">
-                                <button className="py-2 px-1 text-xs font-bold rounded-lg bg-primary text-white shadow-sm transition-all" type="button">Patient</button>
-                                <button className="py-2 px-1 text-xs font-bold rounded-lg text-slate-400 hover:bg-slate-100 transition-all" type="button">Doctor</button>
-                                <button className="py-2 px-1 text-xs font-bold rounded-lg text-slate-400 hover:bg-slate-100 transition-all" type="button">Admin</button>
+                            <div className="grid grid-cols-1 sm:grid-cols-3 gap-2 p-1 sm:p-1 bg-slate-50 sm:bg-slate-50 rounded-xl border border-slate-100">
+                                <button className="py-3 sm:py-2 px-2 sm:px-1 text-sm sm:text-xs font-bold rounded-lg bg-primary text-white shadow-sm transition-all" type="button">Patient</button>
+                                <button className="py-3 sm:py-2 px-2 sm:px-1 text-sm sm:text-xs font-bold rounded-lg text-slate-400 hover:bg-slate-200 sm:hover:bg-slate-100 transition-all bg-white sm:bg-transparent shadow-sm sm:shadow-none border border-slate-100 sm:border-transparent" type="button">Doctor</button>
+                                <button className="py-3 sm:py-2 px-2 sm:px-1 text-sm sm:text-xs font-bold rounded-lg text-slate-400 hover:bg-slate-200 sm:hover:bg-slate-100 transition-all bg-white sm:bg-transparent shadow-sm sm:shadow-none border border-slate-100 sm:border-transparent" type="button">Admin</button>
                             </div>
                         </div>
 

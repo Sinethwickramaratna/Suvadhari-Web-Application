@@ -8,8 +8,8 @@ export default function HomePage() {
             {/* Hero Section */}
             <header className="hero-gradient pt-40 pb-32 md:pt-56 md:pb-48 text-white relative overflow-hidden" data-purpose="hero-header" style={{ backgroundImage: "linear-gradient(rgba(15, 23, 42, 0.9), rgba(15, 23, 42, 0.9)), url('https://lh3.googleusercontent.com/aida-public/AB6AXuDpMe-Y0mmAJpvjvHgFMLFK8cAOHNj873Am1MVQYJUeC3rUhfolz8q5QQgKRdbeB2PPXmMit_uIMdvpgqEPfuxe0OpwB572c734FpbZJiiMNrfu28emmSDBAPe_K-Gf2DZ-f5h4l8VAbDAXd5zksmbog-zddAmVbMA6-yB9tO6l0AyxpbtSkXT5OsxrtJ3xQhgRC9slWl2BValaM9NTon6fc77Wdg5sE1QF4NwS3Exb4Je4dymITkjhcgCAKjBZZ9GU2tZNyafYy0j4')", backgroundSize: "cover", backgroundPosition: "center" }}>
                 <div className="absolute top-0 left-0 w-full h-full overflow-hidden pointer-events-none opacity-20">
-                    <div className="absolute -top-1/4 -left-1/4 w-1/2 h-1/2 bg-primary rounded-full blur-[120px]"></div>
-                    <div className="absolute -bottom-1/4 -right-1/4 w-1/2 h-1/2 bg-blue-600 rounded-full blur-[120px]"></div>
+                    <div className="absolute -top-1/4 -left-1/4 w-1/2 h-1/2 bg-primary rounded-full blur-[120px] animate-float-glow"></div>
+                    <div className="absolute -bottom-1/4 -right-1/4 w-1/2 h-1/2 bg-blue-600 rounded-full blur-[120px] animate-float-glow-reverse"></div>
                 </div>
                 <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10 text-center">
                     <h1 className="text-5xl md:text-8xl font-black leading-tight mb-8 tracking-tighter">
@@ -88,7 +88,7 @@ export default function HomePage() {
                     </div>
                     <div className="grid md:grid-cols-3 gap-8">
                         {/* Patient Card */}
-                        <div className="bg-white p-10 rounded-2xl-custom shadow-layered hover:shadow-2xl transition-all duration-500 border border-gray-50 flex flex-col">
+                        <div className="bg-white p-10 rounded-2xl-custom shadow-layered hover:shadow-2xl hover:scale-[1.03] transition-all duration-500 border border-gray-50 flex flex-col">
                             <div className="mb-8 overflow-hidden rounded-xl-custom h-56 relative group">
                                 <img alt="Patient" className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110" src="https://lh3.googleusercontent.com/aida-public/AB6AXuDWiOS3QZPGSc1Sr9EbYCa8JDNGMXGxCLiRqAJ8w5Ovym53DxrpOWeEc0sjruGv2rL6J635Q9ZjBqRbb2Biy_KLe5kCwIgdVPVZhPv5B6yZBosJ7IWfnm9VitMp1movUZRyJtWPycig5yuad4GjqWBO8lli-1PUoyxBaR_2eCbLy3oP1YV6pXLcQ5V5DydNf-lzaJ1ggRnW9-ytzFZgn9ddesiNTb8WIqJex0EcWbZ2dfuCYHU3hTgliqqNSiQT64y3W9LOSvLqzAFU" />
                                 <div className="absolute inset-0 bg-primary/10 opacity-0 group-hover:opacity-100 transition-opacity"></div>
@@ -104,7 +104,7 @@ export default function HomePage() {
                             </ul>
                         </div>
                         {/* Doctor Card */}
-                        <div className="bg-white p-10 rounded-2xl-custom shadow-2xl transition-all duration-500 ring-4 ring-primary/5 relative -top-4 flex flex-col">
+                        <div className="bg-white p-10 rounded-2xl-custom shadow-2xl hover:scale-[1.03] transition-all duration-500 ring-4 ring-primary/5 relative -top-4 flex flex-col">
                             <div className="mb-8 overflow-hidden rounded-xl-custom h-56 relative group">
                                 <img alt="Doctor" className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110" src="https://lh3.googleusercontent.com/aida-public/AB6AXuCnoSTlIZTvemwqODpVEoJBNsdqMeOA2ZBPJCeMVchEgn4TL23jYMtcQCPXub9SVtLNIwfWZOpx18TiuV4vmas1VM6s93PvRwmDh5sLpuLza5jipCWgbrOcVTxnaK9cANSyZ5u231CvKkT5Abtd1yznvVOE7dqlQaYY7A_n0MRIahV5ktgRrOxRU3wqkf7GSeO-7quYLddjqfh1Hpty9GM-bDu5q8CUaWCa35DY2gpJwjRhn2u1fGEquch9om9nfcPSr4jiDMXhu7pb" />
                                 <div className="absolute inset-0 bg-primary/10 opacity-0 group-hover:opacity-100 transition-opacity"></div>
@@ -120,7 +120,7 @@ export default function HomePage() {
                             </ul>
                         </div>
                         {/* Medical Staff Card */}
-                        <div className="bg-white p-10 rounded-2xl-custom shadow-layered hover:shadow-2xl transition-all duration-500 border border-gray-50 flex flex-col">
+                        <div className="bg-white p-10 rounded-2xl-custom shadow-layered hover:shadow-2xl hover:scale-[1.03] transition-all duration-500 border border-gray-50 flex flex-col">
                             <div className="mb-8 overflow-hidden rounded-xl-custom h-56 relative group">
                                 <img alt="Medical Staff" className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110" src="https://lh3.googleusercontent.com/aida-public/AB6AXuBU1CjI8RUWk_yXcxsi2wO7uRqI5-v75qGMIbzThCwmR8o3pWUlxs9l0ovUWC1jkA0RLll3BZu0fQ7hLFDrAuuu8mx7m5MsN0QO50xaVckXCtQBPlMQH-BJlhacZ-CywBbK0huYlue034t1ABpVbRNis4CZY8SoXa1NYn_IO1vOyMpAx2NEYinQDZbctiqMyiHxKFVO9YtgZBIlaRWZV7i-H-86Hukd63moGQwt1CBmFjcngb2RxoR2uBpp7GtmBX7ca2AIU8fkSgzl" />
                                 <div className="absolute inset-0 bg-primary/10 opacity-0 group-hover:opacity-100 transition-opacity"></div>
@@ -147,7 +147,7 @@ export default function HomePage() {
                     </div>
                     <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
                         {/* Feature 1 */}
-                        <div className="glass-card p-10 rounded-2xl-custom hover:bg-white/10 transition-colors group">
+                        <div className="glass-card p-10 rounded-2xl-custom hover:bg-white/10 hover:scale-[1.03] transition-all duration-400 group">
                             <div className="w-14 h-14 bg-primary/20 rounded-2xl flex items-center justify-center mb-8 group-hover:bg-primary transition-colors">
                                 <span className="material-symbols-outlined text-primary text-3xl group-hover:text-white">manage_accounts</span>
                             </div>
@@ -155,7 +155,7 @@ export default function HomePage() {
                             <p className="text-slate-400 leading-relaxed">You decide who can access your records and for how long. Total privacy control at your fingertips.</p>
                         </div>
                         {/* Feature 2 */}
-                        <div className="glass-card p-10 rounded-2xl-custom hover:bg-white/10 transition-colors group">
+                        <div className="glass-card p-10 rounded-2xl-custom hover:bg-white/10 hover:scale-[1.03] transition-all duration-400 group">
                             <div className="w-14 h-14 bg-primary/20 rounded-2xl flex items-center justify-center mb-8 group-hover:bg-primary transition-colors">
                                 <span className="material-symbols-outlined text-primary text-3xl group-hover:text-white">lock_person</span>
                             </div>
@@ -163,7 +163,7 @@ export default function HomePage() {
                             <p className="text-slate-400 leading-relaxed">Industry-grade AES-256 protection for all sensitive medical information, compliant with global standards.</p>
                         </div>
                         {/* Feature 3 */}
-                        <div className="glass-card p-10 rounded-2xl-custom hover:bg-white/10 transition-colors group">
+                        <div className="glass-card p-10 rounded-2xl-custom hover:bg-white/10 hover:scale-[1.03] transition-all duration-400 group">
                             <div className="w-14 h-14 bg-primary/20 rounded-2xl flex items-center justify-center mb-8 group-hover:bg-primary transition-colors">
                                 <span className="material-symbols-outlined text-primary text-3xl group-hover:text-white">query_stats</span>
                             </div>
@@ -171,7 +171,7 @@ export default function HomePage() {
                             <p className="text-slate-400 leading-relaxed">Find critical details in seconds, not minutes. AI-driven insights help you navigate complex medical data.</p>
                         </div>
                         {/* Feature 4 */}
-                        <div className="glass-card p-10 rounded-2xl-custom hover:bg-white/10 transition-colors group">
+                        <div className="glass-card p-10 rounded-2xl-custom hover:bg-white/10 hover:scale-[1.03] transition-all duration-400 group">
                             <div className="w-14 h-14 bg-primary/20 rounded-2xl flex items-center justify-center mb-8 group-hover:bg-primary transition-colors">
                                 <span className="material-symbols-outlined text-primary text-3xl group-hover:text-white">hub</span>
                             </div>
@@ -179,7 +179,7 @@ export default function HomePage() {
                             <p className="text-slate-400 leading-relaxed">Access records across hospitals without duplication. A unified view of the patient's entire journey.</p>
                         </div>
                         {/* Feature 5 */}
-                        <div className="glass-card p-10 rounded-2xl-custom hover:bg-white/10 transition-colors group md:col-span-2 lg:col-span-1">
+                        <div className="glass-card p-10 rounded-2xl-custom hover:bg-white/10 hover:scale-[1.03] transition-all duration-400 group md:col-span-2 lg:col-span-1">
                             <div className="w-14 h-14 bg-primary/20 rounded-2xl flex items-center justify-center mb-8 group-hover:bg-primary transition-colors">
                                 <span className="material-symbols-outlined text-primary text-3xl group-hover:text-white">history_edu</span>
                             </div>
@@ -224,7 +224,7 @@ export default function HomePage() {
                         </div>
                         <div className="relative">
                             <div className="absolute -inset-4 bg-primary/5 rounded-[40px] blur-2xl"></div>
-                            <div className="relative bg-white rounded-2xl-custom p-16 shadow-layered border border-gray-100 flex items-center justify-center">
+                            <div className="relative bg-white rounded-2xl-custom p-16 shadow-layered border border-gray-100 flex items-center justify-center hover:shadow-2xl hover:scale-[1.03] transition-all duration-500">
                                 <div className="text-center">
                                     <div className="relative inline-block mb-6">
                                         <p className="text-7xl md:text-8xl font-black text-primary">99.9<span className="text-4xl">%</span></p>

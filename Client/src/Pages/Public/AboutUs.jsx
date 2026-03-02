@@ -49,7 +49,7 @@ export default function AboutUs() {
 
                         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8">
                             {/* Sineth Wickramaratna */}
-                            <div className="bg-white p-8 rounded-2xl shadow-xl shadow-slate-200/50 border border-slate-100 flex flex-col items-center text-center group hover:border-primary transition-all">
+                            <div className="bg-white p-8 rounded-2xl shadow-xl shadow-slate-200/50 border border-slate-100 flex flex-col items-center text-center group hover:border-primary hover:scale-[1.03] transition-all duration-400">
                                 <div className="size-32 rounded-full overflow-hidden mb-6 border-4 border-slate-50 group-hover:border-primary/20 transition-all">
                                     <img className="w-full h-full object-cover" data-alt="Sineth Wickramaratna Co-Founder Portrait" src="https://lh3.googleusercontent.com/aida-public/AB6AXuD6iVKgKGN_aBHku_teSrmj5cqKpHjIaNsjLzZpXRnRk8wF8SXUGo-EQ4Dp-QwCHZWN0GO9BCvMMwWJAB3IFiTh2q2DYitwnlS2LI83Qjl7RwJ3hXybo7LcBRmixn0vSe7GFNS9CxYKyPgklTnALvcbao7KfAY8bjGJ0AAfnEPP7qTcgzV59OcaJNFn0IoLkS8CItg9JjS68lJiETW89SKoA9LkTefe151pkUuplzHNSujmgow6KPcAKRVXXHx_7q6wgn9ZflZcFeTq" />
                                 </div>
@@ -59,7 +59,7 @@ export default function AboutUs() {
                             </div>
 
                             {/* Nimsika Bosilu */}
-                            <div className="bg-white p-8 rounded-2xl shadow-xl shadow-slate-200/50 border border-slate-100 flex flex-col items-center text-center group hover:border-primary transition-all">
+                            <div className="bg-white p-8 rounded-2xl shadow-xl shadow-slate-200/50 border border-slate-100 flex flex-col items-center text-center group hover:border-primary hover:scale-[1.03] transition-all duration-400">
                                 <div className="size-32 rounded-full overflow-hidden mb-6 border-4 border-slate-50 group-hover:border-primary/20 transition-all">
                                     <img className="w-full h-full object-cover" data-alt="Nimsika Bosilu Lead Developer Portrait" src="https://lh3.googleusercontent.com/aida-public/AB6AXuB3AN7esfg41hRb11H2w1wG8PCMXHYBfwTNjrHKADCRNcrI_MkqFDRNuZb0SHnmXJyekTvE0j4wUxM8ealzcpLXajVDZEjxP5r4yfrodnXszz6zoe3jZls98ruGVLG_F36xoJdafVza7jEjWI4rG19k9wOwel2LOKYmyijlJe3iXnDe9PaBQQ5xUK3hkT1ib4H8uIqxdWMZgTDkklX_YcIwmnABNgM8Mp9vSC9RRiZVyW2uFI-6Kjs7x5WQYw7Pp5kVOaTr8Yn5eARw" />
                                 </div>
@@ -69,7 +69,7 @@ export default function AboutUs() {
                             </div>
 
                             {/* Thashira Devinda */}
-                            <div className="bg-white p-8 rounded-2xl shadow-xl shadow-slate-200/50 border border-slate-100 flex flex-col items-center text-center group hover:border-primary transition-all">
+                            <div className="bg-white p-8 rounded-2xl shadow-xl shadow-slate-200/50 border border-slate-100 flex flex-col items-center text-center group hover:border-primary hover:scale-[1.03] transition-all duration-400">
                                 <div className="size-32 rounded-full overflow-hidden mb-6 border-4 border-slate-50 group-hover:border-primary/20 transition-all">
                                     <img className="w-full h-full object-cover" data-alt="Thashira Devinda UI/UX Designer Portrait" src="https://lh3.googleusercontent.com/aida-public/AB6AXuA-9X12zec_hPQxF5J69KC-CRReeX9LsOnJzbneTpN43zDZgpCBDP27ZwdKNeXuhkCNXph2fL1rAdTZd4_o2uJzXcAILV_zT8MR98lD4dr5UPBphb5YdwhHB2DAghcW8fHpKzFIjzR5BFYnT1eSDCd2d8bNO9HRZf13AHVtbem2c4JlGZZ56x57CODX7VcVwZsAawZ1fYkihNI58TDeGkn0yw7WoabZ9k_FSWIQWDjadg3-XhdgHzLOXxHBbdOo-7VH-awfDgWEaXpw" />
                                 </div>
@@ -79,7 +79,7 @@ export default function AboutUs() {
                             </div>
 
                             {/* Gimsara Bulagala */}
-                            <div className="bg-white p-8 rounded-2xl shadow-xl shadow-slate-200/50 border border-slate-100 flex flex-col items-center text-center group hover:border-primary transition-all">
+                            <div className="bg-white p-8 rounded-2xl shadow-xl shadow-slate-200/50 border border-slate-100 flex flex-col items-center text-center group hover:border-primary hover:scale-[1.03] transition-all duration-400">
                                 <div className="size-32 rounded-full overflow-hidden mb-6 border-4 border-slate-50 group-hover:border-primary/20 transition-all">
                                     <img className="w-full h-full object-cover" data-alt="Gimsara Bulagala Systems Architect Portrait" src="https://lh3.googleusercontent.com/aida-public/AB6AXuAnai564UzoPTfgd-Ul1538mCAcKTILWgmaSqVZH9LYA7_0UdmRCLWDm9FJsY5JolHNJClyLDrLTc1Ylb2wcYUDU6VaLiySx3GnX4ofc2xXK-BJaju3v5JWKXa2IbqUBzmwZC493AKLl6ldN5lbWLEEgn-HR_VU5BdDkrUpTFjmuy_nKki7eFys8ZP4_uhwlDyy2fJ1cW0o5JLgUaTk_qsJWtthGl94e61U67lqfaLUu7MLxxj9NtphLvDS0L7JAq5vn2COct2PMIrD" />
                                 </div>
