@@ -14,7 +14,7 @@ export default function VerifyEmail() {
     const email = location.state?.email || 'user@email.com';
 
     // Timer state
-    const [timer, setTimer] = useState(60);
+    const [timer, setTimer] = useState(30);
     const [canResend, setCanResend] = useState(false);
 
     useEffect(() => {
@@ -89,6 +89,14 @@ export default function VerifyEmail() {
         if (fullCode.length === 6) {
             console.log('Verifying code:', fullCode);
             // Here you would typically make an API call to verify the code
+
+            // For now, simulate success:
+            if (location.state?.source === 'registration') {
+                navigate('/registration-success');
+            } else {
+                // Navigate to password reset since source wasn't registration
+                navigate('/reset-password', { state: { email } });
+            }
         }
     };
 

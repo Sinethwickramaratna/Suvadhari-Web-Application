@@ -6,7 +6,15 @@ import Footer from '../../components/Footer';
 export default function Registration() {
     const [selectedRole, setSelectedRole] = useState('Patient');
     const [email, setEmail] = useState('');
+    const [password, setPassword] = useState('');
     const navigate = useNavigate();
+
+    const passwordValidations = {
+        length: password.length >= 8,
+        special: /[!@#$%^&*()_+\-=\[\]{};':"\\|,.<>\/?]+/.test(password),
+        uppercase: /[A-Z]/.test(password),
+        number: /[0-9]/.test(password)
+    };
 
     const handleSubmit = (e) => {
         e.preventDefault();
@@ -172,6 +180,9 @@ export default function Registration() {
                                         className="w-full px-4 py-3 bg-slate-50 border border-slate-100 rounded-xl focus:ring-2 focus:ring-primary/20 focus:border-primary outline-none transition-all text-slate-800"
                                         type="password"
                                         placeholder="••••••••"
+                                        value={password}
+                                        onChange={(e) => setPassword(e.target.value)}
+                                        required
                                     />
                                 </div>
                                 <div>
@@ -180,7 +191,47 @@ export default function Registration() {
                                         className="w-full px-4 py-3 bg-slate-50 border border-slate-100 rounded-xl focus:ring-2 focus:ring-primary/20 focus:border-primary outline-none transition-all text-slate-800"
                                         type="password"
                                         placeholder="••••••••"
+                                        required
                                     />
+                                </div>
+                            </div>
+
+                            {/* Requirements Checklist */}
+                            <div className="bg-slate-50 p-4 rounded-xl border border-slate-100 space-y-2">
+                                <p className="text-xs font-semibold text-slate-500 uppercase tracking-wider">Password Requirements:</p>
+                                <div className="grid grid-cols-2 gap-2">
+                                    <div className={`flex items-center gap-2 text-xs font-medium ${passwordValidations.length ? 'text-slate-800' : 'text-slate-500'}`}>
+                                        {passwordValidations.length ? (
+                                            <span className="material-symbols-outlined text-[16px] text-emerald-500">check_circle</span>
+                                        ) : (
+                                            <span className="material-symbols-outlined text-[16px] opacity-40">radio_button_unchecked</span>
+                                        )}
+                                        At least 8 characters
+                                    </div>
+                                    <div className={`flex items-center gap-2 text-xs font-medium ${passwordValidations.special ? 'text-slate-800' : 'text-slate-500'}`}>
+                                        {passwordValidations.special ? (
+                                            <span className="material-symbols-outlined text-[16px] text-emerald-500">check_circle</span>
+                                        ) : (
+                                            <span className="material-symbols-outlined text-[16px] opacity-40">radio_button_unchecked</span>
+                                        )}
+                                        One special character
+                                    </div>
+                                    <div className={`flex items-center gap-2 text-xs font-medium ${passwordValidations.uppercase ? 'text-slate-800' : 'text-slate-500'}`}>
+                                        {passwordValidations.uppercase ? (
+                                            <span className="material-symbols-outlined text-[16px] text-emerald-500">check_circle</span>
+                                        ) : (
+                                            <span className="material-symbols-outlined text-[16px] opacity-40">radio_button_unchecked</span>
+                                        )}
+                                        One uppercase letter
+                                    </div>
+                                    <div className={`flex items-center gap-2 text-xs font-medium ${passwordValidations.number ? 'text-slate-800' : 'text-slate-500'}`}>
+                                        {passwordValidations.number ? (
+                                            <span className="material-symbols-outlined text-[16px] text-emerald-500">check_circle</span>
+                                        ) : (
+                                            <span className="material-symbols-outlined text-[16px] opacity-40">radio_button_unchecked</span>
+                                        )}
+                                        One number
+                                    </div>
                                 </div>
                             </div>
 
