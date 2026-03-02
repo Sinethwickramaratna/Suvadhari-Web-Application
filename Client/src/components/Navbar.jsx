@@ -23,9 +23,9 @@ const Navbar = () => {
                     {/* Desktop Links */}
                     <div className="hidden md:flex space-x-8 items-center">
                         <Link className="text-slate-600 hover:text-primary font-medium transition-colors" to="/">Home</Link>
-                        <a className="text-slate-600 hover:text-primary font-medium transition-colors" href={getHashLink('#features')}>Features</a>
+                        <Link className="text-slate-600 hover:text-primary font-medium transition-colors" to="/features">Features</Link>
                         <Link className="text-slate-600 hover:text-primary font-medium transition-colors" to="/how-it-works">How It Works</Link>
-                        <a className="text-slate-600 hover:text-primary font-medium transition-colors" href={getHashLink('#about')}>About</a>
+                        <Link className="text-slate-600 hover:text-primary font-medium transition-colors" to="/about">About Us</Link>
                         <a className="text-slate-600 hover:text-primary font-medium transition-colors" href={getHashLink('#contact')}>Contact</a>
                     </div>
                     {/* Auth Buttons */}

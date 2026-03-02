@@ -6,20 +6,28 @@ export default function HowItWorks() {
     return (
         <div className="relative flex min-h-screen flex-col overflow-x-hidden dna-pattern">
             <Navbar />
-            <main className="flex-1">
+            <main className="flex-1 relative pt-20">
                 {/* Hero Section */}
-                <section className="relative flex min-h-[50vh] flex-col items-center justify-center px-6 pt-40 pb-20 text-center bg-slate-900">
-                    <div className="absolute inset-0 -z-10 bg-[radial-gradient(circle_at_50%_50%,rgba(41,122,245,0.08),transparent_70%)]"></div>
-                    <div className="max-w-4xl space-y-6">
-                        <h1 className="text-4xl font-black uppercase leading-tight tracking-tight md:text-6xl text-white">
+                <section className="relative bg-slate-900 overflow-hidden py-24 lg:py-32" data-purpose="how-it-works-hero">
+                    {/* Medical pattern overlay */}
+                    <div className="absolute inset-0 opacity-10 pointer-events-none" style={{ backgroundImage: 'radial-gradient(circle at 2px 2px, #0ea5e9 1px, transparent 0)', backgroundSize: '40px 40px' }}></div>
+                    <div className="absolute -top-24 -right-24 w-96 h-96 bg-primary/20 rounded-full blur-[100px]"></div>
+                    <div className="absolute -bottom-24 -left-24 w-96 h-96 bg-blue-400/20 rounded-full blur-[100px]"></div>
+
+                    <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10 text-center">
+                        <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-white/10 text-primary text-sm font-bold mb-6 backdrop-blur-sm border border-white/10">
+                            <span className="material-symbols-outlined text-sm">info</span>
+                            HOW IT WORKS
+                        </div>
+                        <h1 className="text-5xl md:text-7xl font-black text-white leading-tight tracking-tight mb-8">
                             SIMPLE. SECURE.<br />
                             <span className="text-primary">PATIENT-CONTROLLED.</span>
                         </h1>
-                        <p className="mx-auto max-w-2xl text-lg md:text-xl text-slate-300">
+                        <p className="max-w-2xl mx-auto text-slate-300 text-lg md:text-xl leading-relaxed">
                             SUVADHARI Makes Managing Healthcare Information Easy for Everyone Involved.
                         </p>
-                        <div className="flex justify-center pt-4">
-                            <button className="flex items-center gap-2 rounded-xl bg-primary px-8 py-4 text-lg font-bold text-white transition-all hover:scale-105">
+                        <div className="mt-12 flex flex-wrap justify-center gap-4">
+                            <button className="flex items-center gap-2 px-8 py-4 bg-primary text-white font-bold rounded-2xl hover:translate-y-[-2px] transition-all shadow-xl shadow-primary/30">
                                 Get Started Now
                                 <span className="material-symbols-outlined">arrow_forward</span>
                             </button>
