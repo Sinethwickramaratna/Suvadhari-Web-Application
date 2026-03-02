@@ -30,7 +30,7 @@ const Navbar = () => {
                     </div>
                     {/* Auth Buttons */}
                     <div className="hidden md:flex items-center space-x-4">
-                        <button className="px-5 py-2 text-primary font-semibold hover:bg-accent rounded-custom transition-all">Log In</button>
+                        <Link to="/login" className="px-5 py-2 text-primary font-semibold hover:bg-accent rounded-custom transition-all">Log In</Link>
                         <button className="px-6 py-2.5 bg-primary text-white font-semibold rounded-custom shadow-lg shadow-blue-500/30 hover:bg-blue-600 transition-all">Register</button>
                     </div>
                     {/* Mobile Menu Button (Icon Only) */}

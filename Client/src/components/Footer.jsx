@@ -33,9 +33,9 @@ const Footer = () => {
                     <div>
                         <h6 className="text-secondary font-bold uppercase tracking-widest text-sm mb-6">For Users</h6>
                         <ul className="space-y-4">
-                            <li><a className="text-slate-500 hover:text-primary transition-colors" href="#">Patient Portal</a></li>
-                            <li><a className="text-slate-500 hover:text-primary transition-colors" href="#">Doctor Portal</a></li>
-                            <li><a className="text-slate-500 hover:text-primary transition-colors" href="#">Medical Staff Access</a></li>
+                            <li><Link className="text-slate-500 hover:text-primary transition-colors" to="/login">Patient Portal</Link></li>
+                            <li><Link className="text-slate-500 hover:text-primary transition-colors" to="/login">Doctor Portal</Link></li>
+                            <li><Link className="text-slate-500 hover:text-primary transition-colors" to="/login">Medical Staff Access</Link></li>
                             <li><a className="text-slate-500 hover:text-primary transition-colors" href="#">Access Requests</a></li>
                             <li><a className="text-slate-500 hover:text-primary transition-colors" href="#">AI Assistant</a></li>
                         </ul>
