@@ -22,11 +22,11 @@ const Footer = () => {
                     <div>
                         <h6 className="text-secondary font-bold uppercase tracking-widest text-sm mb-6">Quick Links</h6>
                         <ul className="space-y-4">
-                            <li><a className="text-slate-500 hover:text-primary transition-colors" href="#">Home</a></li>
-                            <li><a className="text-slate-500 hover:text-primary transition-colors" href="#">Features</a></li>
-                            <li><a className="text-slate-500 hover:text-primary transition-colors" href="#">How It Works</a></li>
-                            <li><a className="text-slate-500 hover:text-primary transition-colors" href="#">About Us</a></li>
-                            <li><a className="text-slate-500 hover:text-primary transition-colors" href="#">Contact Us</a></li>
+                            <li><Link className="text-slate-500 hover:text-primary transition-colors" to="/">Home</Link></li>
+                            <li><Link className="text-slate-500 hover:text-primary transition-colors" to="/features">Features</Link></li>
+                            <li><Link className="text-slate-500 hover:text-primary transition-colors" to="/how-it-works">How It Works</Link></li>
+                            <li><Link className="text-slate-500 hover:text-primary transition-colors" to="/about">About Us</Link></li>
+                            <li><Link className="text-slate-500 hover:text-primary transition-colors" to="/contact">Contact Us</Link></li>
                         </ul>
                     </div>
                     {/* For Users */}

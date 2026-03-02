@@ -26,7 +26,7 @@ const Navbar = () => {
                         <Link className="text-slate-600 hover:text-primary font-medium transition-colors" to="/features">Features</Link>
                         <Link className="text-slate-600 hover:text-primary font-medium transition-colors" to="/how-it-works">How It Works</Link>
                         <Link className="text-slate-600 hover:text-primary font-medium transition-colors" to="/about">About Us</Link>
-                        <a className="text-slate-600 hover:text-primary font-medium transition-colors" href={getHashLink('#contact')}>Contact</a>
+                        <Link className="text-slate-600 hover:text-primary font-medium transition-colors" to="/contact">Contact</Link>
                     </div>
                     {/* Auth Buttons */}
                     <div className="hidden md:flex items-center space-x-4">
