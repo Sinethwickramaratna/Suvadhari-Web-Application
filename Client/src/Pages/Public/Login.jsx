@@ -1,8 +1,11 @@
-import React from 'react';
+import React, { useState } from 'react';
+import { Link } from 'react-router-dom';
 import Navbar from '../../components/Navbar';
 import Footer from '../../components/Footer';
 
 export default function Login() {
+    const [selectedRole, setSelectedRole] = useState('Patient');
+
     return (
         <div className="hero-gradient min-h-screen flex flex-col font-sans relative overflow-hidden">
             <Navbar />
@@ -33,10 +36,28 @@ export default function Login() {
                                 <span className="material-symbols-outlined text-primary text-lg">person_pin</span>
                                 Select Role
                             </label>
-                            <div className="grid grid-cols-1 sm:grid-cols-3 gap-2 p-1 sm:p-1 bg-slate-50 sm:bg-slate-50 rounded-xl border border-slate-100">
-                                <button className="py-3 sm:py-2 px-2 sm:px-1 text-sm sm:text-xs font-bold rounded-lg bg-primary text-white shadow-sm transition-all" type="button">Patient</button>
-                                <button className="py-3 sm:py-2 px-2 sm:px-1 text-sm sm:text-xs font-bold rounded-lg text-slate-400 hover:bg-slate-200 sm:hover:bg-slate-100 transition-all bg-white sm:bg-transparent shadow-sm sm:shadow-none border border-slate-100 sm:border-transparent" type="button">Doctor</button>
-                                <button className="py-3 sm:py-2 px-2 sm:px-1 text-sm sm:text-xs font-bold rounded-lg text-slate-400 hover:bg-slate-200 sm:hover:bg-slate-100 transition-all bg-white sm:bg-transparent shadow-sm sm:shadow-none border border-slate-100 sm:border-transparent" type="button">Admin</button>
+                            <div className="grid grid-cols-1 sm:grid-cols-3 gap-2 p-1 sm:p-1 bg-slate-50 sm:bg-slate-50 rounded-xl border border-slate-100 relative z-10">
+                                <button
+                                    className={`py-3 sm:py-2 px-2 sm:px-1 text-sm sm:text-xs font-bold rounded-lg transition-all shadow-sm ${selectedRole === 'Patient' ? 'bg-primary text-white' : 'text-slate-500 bg-white sm:bg-transparent hover:bg-slate-200 sm:hover:bg-slate-100 sm:shadow-none border border-slate-100 sm:border-transparent'}`}
+                                    type="button"
+                                    onClick={() => setSelectedRole('Patient')}
+                                >
+                                    Patient
+                                </button>
+                                <button
+                                    className={`py-3 sm:py-2 px-2 sm:px-1 text-sm sm:text-xs font-bold rounded-lg transition-all shadow-sm ${selectedRole === 'Doctor' ? 'bg-primary text-white' : 'text-slate-500 bg-white sm:bg-transparent hover:bg-slate-200 sm:hover:bg-slate-100 sm:shadow-none border border-slate-100 sm:border-transparent'}`}
+                                    type="button"
+                                    onClick={() => setSelectedRole('Doctor')}
+                                >
+                                    Doctor
+                                </button>
+                                <button
+                                    className={`py-3 sm:py-2 px-2 sm:px-1 text-sm sm:text-xs font-bold rounded-lg transition-all shadow-sm ${selectedRole === 'Admin' ? 'bg-primary text-white' : 'text-slate-500 bg-white sm:bg-transparent hover:bg-slate-200 sm:hover:bg-slate-100 sm:shadow-none border border-slate-100 sm:border-transparent'}`}
+                                    type="button"
+                                    onClick={() => setSelectedRole('Admin')}
+                                >
+                                    Admin
+                                </button>
                             </div>
                         </div>
 
@@ -56,7 +77,7 @@ export default function Login() {
                                     <span className="material-symbols-outlined text-primary text-lg">lock</span>
                                     Password
                                 </label>
-                                <a className="text-xs font-bold text-primary hover:underline" href="#">Forgot Password?</a>
+                                <Link className="text-xs font-bold text-primary hover:underline" to="/forgot-password">Forgot Password?</Link>
                             </div>
                             <div className="relative group">
                                 <input className="w-full pl-4 pr-12 py-3 bg-slate-50 border border-slate-100 rounded-xl focus:ring-2 focus:ring-primary/20 focus:border-primary outline-none transition-all text-slate-800 placeholder-slate-400" id="password" placeholder="••••••••" type="password" />
@@ -81,7 +102,7 @@ export default function Login() {
 
                     <div className="mt-8 flex items-center justify-center gap-2">
                         <span className="text-slate-400">Don't have an account?</span>
-                        <a className="font-bold text-primary hover:underline" href="#">Create an account</a>
+                        <Link to="/register" className="font-bold text-primary hover:underline">Create an account</Link>
                     </div>
                 </div>
             </main>

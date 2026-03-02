@@ -6,6 +6,8 @@ import Features from './Pages/Public/Features';
 import AboutUs from './Pages/Public/AboutUs';
 import ContactUs from './Pages/Public/ContactUs';
 import Login from './Pages/Public/Login';
+import Registration from './Pages/Public/Registration';
+import ForgotPassword from './Pages/Public/ForgotPassword';
 
 function App() {
   return (
@@ -16,6 +18,8 @@ function App() {
       <Route path="/about" element={<AboutUs />} />
       <Route path="/contact" element={<ContactUs />} />
       <Route path="/login" element={<Login />} />
+      <Route path="/register" element={<Registration />} />
+      <Route path="/forgot-password" element={<ForgotPassword />} />
     </Routes>
   );
 }
