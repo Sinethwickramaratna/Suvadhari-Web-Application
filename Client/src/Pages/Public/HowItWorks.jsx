@@ -6,9 +6,9 @@ export default function HowItWorks() {
     return (
         <div className="relative flex min-h-screen flex-col overflow-x-hidden dna-pattern">
             <Navbar />
-            <main className="flex-1 relative pt-20">
+            <main className="flex-1 relative">
                 {/* Hero Section */}
-                <section className="relative bg-slate-900 overflow-hidden py-24 lg:py-32" data-purpose="how-it-works-hero">
+                <section className="relative bg-slate-900 overflow-hidden pt-40 pb-24 lg:pt-48 lg:pb-32" data-purpose="how-it-works-hero">
                     {/* Medical pattern overlay */}
                     <div className="absolute inset-0 opacity-10 pointer-events-none" style={{ backgroundImage: 'radial-gradient(circle at 2px 2px, #0ea5e9 1px, transparent 0)', backgroundSize: '40px 40px' }}></div>
                     <div className="absolute -top-24 -right-24 w-96 h-96 bg-primary/20 rounded-full blur-[100px]"></div>

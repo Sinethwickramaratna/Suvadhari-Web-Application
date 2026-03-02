@@ -6,9 +6,9 @@ export default function Features() {
     return (
         <div className="antialiased overflow-x-hidden bg-slate-50 text-slate-800">
             <Navbar />
-            <main className="relative pt-20"> {/* Added pt-20 to clear fixed navbar */}
+            <main className="relative">
                 {/* Hero Section */}
-                <section className="relative bg-slate-900 overflow-hidden py-24 lg:py-32" data-purpose="features-hero">
+                <section className="relative bg-slate-900 overflow-hidden pt-40 pb-24 lg:pt-48 lg:pb-32" data-purpose="features-hero">
                     {/* Medical pattern overlay */}
                     <div className="absolute inset-0 opacity-10 pointer-events-none" style={{ backgroundImage: 'radial-gradient(circle at 2px 2px, #0ea5e9 1px, transparent 0)', backgroundSize: '40px 40px' }}></div>
                     <div className="absolute -top-24 -right-24 w-96 h-96 bg-primary/20 rounded-full blur-[100px]"></div>

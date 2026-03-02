@@ -6,9 +6,9 @@ export default function AboutUs() {
     return (
         <div className="bg-background-light text-slate-900 transition-colors duration-300">
             <Navbar />
-            <main className="relative pt-20"> {/* Add padding to prevent navbar overlap */}
+            <main className="relative">
                 {/* Hero Section */}
-                <section className="relative bg-slate-900 overflow-hidden py-24 lg:py-32">
+                <section className="relative bg-slate-900 overflow-hidden pt-40 pb-24 lg:pt-48 lg:pb-32">
                     {/* Medical pattern overlay */}
                     <div className="absolute inset-0 opacity-10 pointer-events-none" style={{ backgroundImage: 'radial-gradient(circle at 2px 2px, #0ea5e9 1px, transparent 0)', backgroundSize: '40px 40px' }}></div>
                     <div className="absolute -top-24 -right-24 w-96 h-96 bg-primary/20 rounded-full blur-[100px]"></div>
