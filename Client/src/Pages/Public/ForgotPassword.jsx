@@ -1,9 +1,17 @@
 import React from 'react';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import Navbar from '../../components/Navbar';
 import Footer from '../../components/Footer';
 
 export default function ForgotPassword() {
+    const navigate = useNavigate();
+
+    const handleSubmit = (e) => {
+        e.preventDefault();
+        // Simply navigate to the next step
+        navigate('/verify-email');
+    };
+
     return (
         <div className="bg-background-light dark:bg-background-dark font-display text-slate-900 dark:text-slate-100 min-h-screen flex flex-col">
             <Navbar />
@@ -28,7 +36,7 @@ export default function ForgotPassword() {
                             </p>
                         </div>
 
-                        <form className="space-y-6">
+                        <form className="space-y-6" onSubmit={handleSubmit}>
                             <div className="space-y-2 text-left">
                                 <label className="text-sm font-medium text-slate-200 ml-1" htmlFor="email">
                                     Email Address
