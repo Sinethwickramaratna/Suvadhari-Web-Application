@@ -2,11 +2,17 @@ import React, { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import Navbar from '../../components/Navbar';
 import Footer from '../../components/Footer';
+import DatePicker from '../../components/DatePicker';
+import Dropdown from '../../components/Dropdown';
 
 export default function Registration() {
     const [selectedRole, setSelectedRole] = useState('Patient');
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
+    const [dateOfBirth, setDateOfBirth] = useState('');
+    const [gender, setGender] = useState('');
+    const [doctorHospital, setDoctorHospital] = useState('');
+    const [adminHospital, setAdminHospital] = useState('');
     const navigate = useNavigate();
 
     const passwordValidations = {
@@ -135,19 +141,23 @@ export default function Registration() {
                             {/* Gender and DOB */}
                             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                                 <div>
-                                    <label className="text-xs font-bold uppercase text-slate-400 mb-1 block">Gender</label>
-                                    <select className="w-full px-4 py-3 bg-slate-50 border border-slate-100 rounded-xl focus:ring-2 focus:ring-primary/20 focus:border-primary outline-none transition-all text-slate-800">
-                                        <option>Select Gender</option>
-                                        <option>Male</option>
-                                        <option>Female</option>
-                                        <option>Other</option>
-                                    </select>
+                                    <Dropdown 
+                                        value={gender}
+                                        onChange={setGender}
+                                        label="Gender"
+                                        placeholder="Select Gender"
+                                        options={[
+                                            { value: 'male', label: 'Male' },
+                                            { value: 'female', label: 'Female' },
+                                            { value: 'other', label: 'Other' }
+                                        ]}
+                                    />
                                 </div>
                                 <div>
-                                    <label className="text-xs font-bold uppercase text-slate-400 mb-1 block">Date of Birth</label>
-                                    <input
-                                        className="w-full px-4 py-3 bg-slate-50 border border-slate-100 rounded-xl focus:ring-2 focus:ring-primary/20 focus:border-primary outline-none transition-all text-slate-800"
-                                        type="date"
+                                    <DatePicker 
+                                        value={dateOfBirth} 
+                                        onChange={setDateOfBirth}
+                                        label="Date of Birth"
                                     />
                                 </div>
                             </div>
@@ -162,15 +172,109 @@ export default function Registration() {
                                 />
                             </div>
 
-                            {/* Allergies/Medical Conditions */}
-                            <div className="space-y-1">
-                                <label className="text-xs font-bold uppercase text-slate-400 mb-1 block">Allergies or Medical Conditions</label>
-                                <textarea
-                                    className="w-full px-4 py-3 bg-slate-50 border border-slate-100 rounded-xl focus:ring-2 focus:ring-primary/20 focus:border-primary outline-none transition-all text-slate-800 placeholder-slate-400 resize-none"
-                                    placeholder="Please list any allergies or chronic conditions (If any)"
-                                    rows="2"
-                                ></textarea>
-                            </div>
+                            {/* Patient Specific Fields */}
+                            {selectedRole === 'Patient' && (
+                                <div className="space-y-1">
+                                    <label className="text-xs font-bold uppercase text-slate-400 mb-1 block">Allergies or Medical Conditions</label>
+                                    <textarea
+                                        className="w-full px-4 py-3 bg-slate-50 border border-slate-100 rounded-xl focus:ring-2 focus:ring-primary/20 focus:border-primary outline-none transition-all text-slate-800 placeholder-slate-400 resize-none"
+                                        placeholder="Please list any allergies or chronic conditions (If any)"
+                                        rows="2"
+                                    ></textarea>
+                                </div>
+                            )}
+
+                            {/* Doctor Specific Fields */}
+                            {selectedRole === 'Doctor' && (
+                                <div className="space-y-4">
+                                    <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                                        <div>
+                                            <label className="text-xs font-bold uppercase text-slate-400 mb-1 block">Medical License ID</label>
+                                            <input
+                                                className="w-full px-4 py-3 bg-slate-50 border border-slate-100 rounded-xl focus:ring-2 focus:ring-primary/20 focus:border-primary outline-none transition-all text-slate-800 placeholder-slate-400"
+                                                placeholder="e.g. SLMC-12345"
+                                                type="text"
+                                            />
+                                        </div>
+                                        <div>
+                                            <label className="text-xs font-bold uppercase text-slate-400 mb-1 block">Speciality</label>
+                                            <input
+                                                className="w-full px-4 py-3 bg-slate-50 border border-slate-100 rounded-xl focus:ring-2 focus:ring-primary/20 focus:border-primary outline-none transition-all text-slate-800 placeholder-slate-400"
+                                                placeholder="e.g. Cardiologist"
+                                                type="text"
+                                            />
+                                        </div>
+                                    </div>
+                                    <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                                        <div>
+                                            <Dropdown
+                                                value={doctorHospital}
+                                                onChange={setDoctorHospital}
+                                                label="Working Hospital"
+                                                placeholder="Select Hospital"
+                                                options={[
+                                                    { value: 'national', label: 'National Hospital of Sri Lanka' },
+                                                    { value: 'kandy', label: 'Teaching Hospital Kandy' },
+                                                    { value: 'karapitiya', label: 'Teaching Hospital Karapitiya' },
+                                                    { value: 'lanka', label: 'Lanka Hospitals' },
+                                                    { value: 'asiri', label: 'Asiri General Hospital' },
+                                                    { value: 'nawaloka', label: 'Nawaloka Hospital' },
+                                                    { value: 'other', label: 'Other' }
+                                                ]}
+                                            />
+                                        </div>
+                                        <div>
+                                            <label className="text-xs font-bold uppercase text-slate-400 mb-1 block">Current Position</label>
+                                            <input
+                                                className="w-full px-4 py-3 bg-slate-50 border border-slate-100 rounded-xl focus:ring-2 focus:ring-primary/20 focus:border-primary outline-none transition-all text-slate-800 placeholder-slate-400"
+                                                placeholder="e.g. Senior Consultant"
+                                                type="text"
+                                            />
+                                        </div>
+                                    </div>
+                                </div>
+                            )}
+
+                            {/* Admin Specific Fields */}
+                            {selectedRole === 'Admin' && (
+                                <div className="space-y-4">
+                                    <div className="space-y-1">
+                                        <Dropdown
+                                            value={adminHospital}
+                                            onChange={setAdminHospital}
+                                            label="Hospital"
+                                            placeholder="Select Hospital"
+                                            options={[
+                                                { value: 'national', label: 'National Hospital of Sri Lanka' },
+                                                { value: 'kandy', label: 'Teaching Hospital Kandy' },
+                                                { value: 'karapitiya', label: 'Teaching Hospital Karapitiya' },
+                                                { value: 'lanka', label: 'Lanka Hospitals' },
+                                                { value: 'asiri', label: 'Asiri General Hospital' },
+                                                { value: 'nawaloka', label: 'Nawaloka Hospital' },
+                                                { value: 'other', label: 'Other' }
+                                            ]}
+                                        />
+                                    </div>
+                                    <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                                        <div>
+                                            <label className="text-xs font-bold uppercase text-slate-400 mb-1 block">Staff ID</label>
+                                            <input
+                                                className="w-full px-4 py-3 bg-slate-50 border border-slate-100 rounded-xl focus:ring-2 focus:ring-primary/20 focus:border-primary outline-none transition-all text-slate-800 placeholder-slate-400"
+                                                placeholder="e.g. STF-98765"
+                                                type="text"
+                                            />
+                                        </div>
+                                        <div>
+                                            <label className="text-xs font-bold uppercase text-slate-400 mb-1 block">Role in Hospital</label>
+                                            <input
+                                                className="w-full px-4 py-3 bg-slate-50 border border-slate-100 rounded-xl focus:ring-2 focus:ring-primary/20 focus:border-primary outline-none transition-all text-slate-800 placeholder-slate-400"
+                                                placeholder="e.g. IT Administrator"
+                                                type="text"
+                                            />
+                                        </div>
+                                    </div>
+                                </div>
+                            )}
 
                             {/* Password Fields */}
                             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">

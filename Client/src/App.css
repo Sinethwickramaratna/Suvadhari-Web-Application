@@ -40,3 +40,26 @@
 .read-the-docs {
   color: #888;
 }
+
+/* Dropdown Select Styling */
+select {
+  padding-right: 2.5rem !important;
+}
+
+select option {
+  padding: 0.75rem;
+  background-color: #ffffff;
+  color: #1e293b;
+  font-weight: 500;
+}
+
+select option:hover {
+  background: linear-gradient(#e0f2fe, #e0f2fe);
+  background-color: #e0f2fe;
+}
+
+select option:checked {
+  background: linear-gradient(#0ea5e9, #0ea5e9);
+  background-color: #0ea5e9;
+  color: #ffffff;
+}
