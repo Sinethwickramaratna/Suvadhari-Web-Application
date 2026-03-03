@@ -53,10 +53,10 @@
   -webkit-backdrop-filter: blur(12px);
   border: 1px solid rgba(0, 0, 0, 0.05);
   transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
-}
 
-@utility how-it-works-card:hover {
-  transform: scale(1.03);
+  &:hover {
+    transform: scale(1.03);
+  }
 }
 
 @utility dna-pattern {
@@ -82,10 +82,10 @@
   border: 1px solid rgba(0, 0, 0, 0.05);
   box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
   transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
-}
 
-@utility feature-card:hover {
-  transform: scale(1.03);
+  &:hover {
+    transform: scale(1.03);
+  }
 }
 
 @utility feature-card-hover {
@@ -110,18 +110,23 @@
 
 /* Moving Glow Animation for Hero Section */
 @keyframes float-glow {
-  0%, 100% {
+
+  0%,
+  100% {
     transform: translate(0, 0) scale(1);
     opacity: 0.2;
   }
+
   25% {
     transform: translate(10%, 15%) scale(1.1);
     opacity: 0.3;
   }
+
   50% {
     transform: translate(5%, 25%) scale(1.05);
     opacity: 0.25;
   }
+
   75% {
     transform: translate(-5%, 10%) scale(1.15);
     opacity: 0.35;
@@ -129,18 +134,23 @@
 }
 
 @keyframes float-glow-reverse {
-  0%, 100% {
+
+  0%,
+  100% {
     transform: translate(0, 0) scale(1);
     opacity: 0.2;
   }
+
   25% {
     transform: translate(-15%, -10%) scale(1.15);
     opacity: 0.35;
   }
+
   50% {
     transform: translate(-20%, -5%) scale(1.1);
     opacity: 0.25;
   }
+
   75% {
     transform: translate(-8%, -15%) scale(1.05);
     opacity: 0.3;
@@ -148,10 +158,13 @@
 }
 
 @keyframes pulse-glow {
-  0%, 100% {
+
+  0%,
+  100% {
     filter: blur(120px);
     opacity: 0.2;
   }
+
   50% {
     filter: blur(140px);
     opacity: 0.35;

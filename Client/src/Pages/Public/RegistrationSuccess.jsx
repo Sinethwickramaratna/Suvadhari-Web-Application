@@ -5,7 +5,7 @@ import Footer from '../../components/Footer';
 
 export default function RegistrationSuccess() {
     return (
-        <div className="bg-background-light dark:bg-background-dark font-display text-slate-900 dark:text-slate-100 min-h-screen flex flex-col">
+        <div className="hero-gradient min-h-screen flex flex-col font-sans relative overflow-hidden">
             <Navbar />
 
             {/* Background Glow Effects */}

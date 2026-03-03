@@ -24,46 +24,44 @@ export default function ForgotPassword() {
                     <div className="absolute -bottom-1/4 -right-1/4 w-1/2 h-1/2 bg-blue-600 rounded-full blur-[120px] animate-float-glow-reverse"></div>
                 </div>
 
-                <div className="w-full max-w-md relative z-10">
+                <div className="w-full max-w-xl relative z-10">
                     {/* Forgot Password Card */}
-                    <div className="glass-card p-10 rounded-2xl-custom shadow-glass border border-white/10">
-                        <div className="flex flex-col gap-2 mb-8 text-center">
-                            <div className="size-16 bg-primary/20 rounded-2xl flex items-center justify-center mx-auto mb-6">
-                                <span className="material-symbols-outlined text-primary text-3xl">lock_reset</span>
+                    <div className="bg-white rounded-2xl shadow-2xl shadow-black/40 p-12 flex flex-col items-center">
+                        <div className="text-center mb-10">
+                            <div className="w-24 h-24 bg-primary/10 rounded-full flex items-center justify-center mx-auto mb-6">
+                                <span className="material-symbols-outlined text-6xl text-primary">lock_reset</span>
                             </div>
-                            <h1 className="text-3xl font-black tracking-tight text-white mb-2">Forgot Password?</h1>
-                            <p className="text-slate-300 text-sm font-light">
+                            <h1 className="text-3xl font-black mb-2 tracking-tight uppercase text-slate-900">Forgot Password?</h1>
+                            <p className="text-slate-500 text-lg leading-relaxed">
                                 Enter your email to receive a password reset link
                             </p>
                         </div>
 
-                        <form className="space-y-6" onSubmit={handleSubmit}>
-                            <div className="space-y-2 text-left">
-                                <label className="text-sm font-medium text-slate-200 ml-1" htmlFor="email">
+                        <form className="w-full space-y-6 text-left" onSubmit={handleSubmit}>
+                            <div className="space-y-2">
+                                <label className="text-sm font-bold uppercase text-slate-400 tracking-wider flex items-center gap-2" htmlFor="email">
+                                    <span className="material-symbols-outlined text-primary text-lg">mail</span>
                                     Email Address
                                 </label>
-                                <div className="relative">
-                                    <span className="material-symbols-outlined absolute left-4 top-1/2 -translate-y-1/2 text-slate-400 text-xl">mail</span>
-                                    <input
-                                        className="w-full bg-white/5 border border-white/10 rounded-xl-custom pl-12 pr-4 py-4 text-white focus:ring-2 focus:ring-primary focus:border-transparent outline-none transition-all placeholder:text-slate-500 backdrop-blur-sm"
-                                        id="email"
-                                        placeholder="name@email.com"
-                                        type="email"
-                                        value={email}
-                                        onChange={(e) => setEmail(e.target.value)}
-                                        required
-                                    />
-                                </div>
+                                <input
+                                    className="w-full px-4 py-3 bg-slate-50 border border-slate-100 rounded-xl focus:ring-2 focus:ring-primary/20 focus:border-primary outline-none transition-all text-slate-800 placeholder-slate-400"
+                                    id="email"
+                                    placeholder="name@email.com"
+                                    type="email"
+                                    value={email}
+                                    onChange={(e) => setEmail(e.target.value)}
+                                    required
+                                />
                             </div>
-                            <button className="w-full bg-primary hover:bg-electric-blue text-white font-bold h-14 rounded-xl-custom transition-all shadow-xl shadow-blue-500/20 text-lg flex items-center justify-center gap-2" type="submit">
+                            <button className="w-full py-5 px-8 bg-primary hover:bg-electric-blue text-white font-bold rounded-xl-custom shadow-xl shadow-blue-500/20 transition-all text-lg uppercase flex items-center justify-center gap-2 active:scale-[0.98]" type="submit">
                                 <span>Send Reset Link</span>
                                 <span className="material-symbols-outlined text-xl">arrow_forward</span>
                             </button>
                         </form>
 
                         <div className="mt-8 text-center">
-                            <Link to="/login" className="inline-flex items-center gap-2 text-sm font-semibold text-primary hover:text-white transition-colors group">
-                                <span className="material-symbols-outlined text-sm group-hover:-translate-x-1 transition-transform">arrow_back</span>
+                            <Link to="/login" className="text-sm font-bold text-slate-500 hover:text-primary hover:underline flex items-center justify-center gap-1.5 transition-colors">
+                                <span className="material-symbols-outlined text-lg">arrow_back</span>
                                 Back to Login
                             </Link>
                         </div>

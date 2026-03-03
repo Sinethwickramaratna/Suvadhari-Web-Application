@@ -101,16 +101,17 @@ export default function VerifyEmail() {
     };
 
     return (
-        <div className="bg-slate-50 text-slate-800 min-h-screen flex flex-col font-sans">
+        <div className="hero-gradient min-h-screen flex flex-col font-sans relative overflow-hidden">
             <Navbar />
 
+            {/* Background Orbs */}
+            <div className="fixed inset-0 overflow-hidden pointer-events-none opacity-20 z-0">
+                <div className="absolute -top-1/4 -left-1/4 w-1/2 h-1/2 bg-primary rounded-full blur-[120px] animate-float-glow"></div>
+                <div className="absolute -bottom-1/4 -right-1/4 w-1/2 h-1/2 bg-blue-600 rounded-full blur-[120px] animate-float-glow-reverse"></div>
+            </div>
+
             {/* Main Content */}
-            <main className="flex-grow flex items-center justify-center px-4 py-32 relative z-10 w-full">
-                {/* Background Decor */}
-                <div className="absolute top-0 left-0 w-full h-full overflow-hidden pointer-events-none opacity-10">
-                    <div className="absolute -top-1/4 -left-1/4 w-1/2 h-1/2 bg-primary rounded-full blur-[120px]"></div>
-                    <div className="absolute top-3/4 -right-1/4 w-1/2 h-1/2 bg-blue-600 rounded-full blur-[120px]"></div>
-                </div>
+            <main className="flex-grow flex items-center justify-center p-4 relative z-10 pt-32 pb-20">
 
                 <div className="max-w-md w-full bg-white rounded-2xl-custom shadow-layered p-12 border border-gray-100 relative z-20">
                     <div className="flex flex-col items-center text-center">

@@ -4,7 +4,7 @@ import Footer from '../../components/Footer';
 
 export default function ContactUs() {
     return (
-        <div className="bg-background-light dark:bg-background-dark text-slate-900 dark:text-slate-100 font-display">
+        <div className="bg-slate-50 text-slate-900 font-display">
             <Navbar />
             <main className="min-h-screen">
                 {/* Hero Section */}
@@ -13,7 +13,6 @@ export default function ContactUs() {
                     <div className="absolute inset-0 opacity-10 pointer-events-none" style={{ backgroundImage: 'radial-gradient(circle at 2px 2px, #0ea5e9 1px, transparent 0)', backgroundSize: '40px 40px' }}></div>
                     <div className="absolute -top-24 -right-24 w-96 h-96 bg-primary/20 rounded-full blur-[100px]"></div>
                     <div className="absolute -bottom-24 -left-24 w-96 h-96 bg-blue-400/20 rounded-full blur-[100px]"></div>
-
                     <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10 text-center">
                         <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-white/10 text-primary text-sm font-bold mb-6 backdrop-blur-sm border border-white/10">
                             <span className="material-symbols-outlined text-sm">support_agent</span>
@@ -42,7 +41,7 @@ export default function ContactUs() {
                             <div className="w-14 h-14 bg-primary/10 rounded-full flex items-center justify-center mb-4">
                                 <span className="material-symbols-outlined text-3xl text-primary">mail</span>
                             </div>
-                            <h3 className="text-xl font-bold mb-2">Email</h3>
+                            <h3 className="text-xl font-bold mb-2 text-white">Email</h3>
                             <p className="text-slate-500 dark:text-slate-400 mb-4">Drop us a line anytime</p>
                             <a className="text-primary font-bold hover:underline" href="mailto:support@suvadhari.lk">support@suvadhari.lk</a>
                         </div>
@@ -51,7 +50,7 @@ export default function ContactUs() {
                             <div className="w-14 h-14 bg-primary/10 rounded-full flex items-center justify-center mb-4">
                                 <span className="material-symbols-outlined text-3xl text-primary">call</span>
                             </div>
-                            <h3 className="text-xl font-bold mb-2">Phone</h3>
+                            <h3 className="text-xl font-bold mb-2 text-white">Phone</h3>
                             <p className="text-slate-500 dark:text-slate-400 mb-4">Mon-Fri from 8am to 5pm</p>
                             <a className="text-primary font-bold hover:underline" href="tel:+94722105684">+94 72 210 5684</a>
                         </div>
@@ -60,7 +59,7 @@ export default function ContactUs() {
                             <div className="w-14 h-14 bg-primary/10 rounded-full flex items-center justify-center mb-4">
                                 <span className="material-symbols-outlined text-3xl text-primary">location_on</span>
                             </div>
-                            <h3 className="text-xl font-bold mb-2">Location</h3>
+                            <h3 className="text-xl font-bold mb-2 text-white">Location</h3>
                             <p className="text-slate-500 dark:text-slate-400 mb-4">Visit our main headquarters</p>
                             <span className="text-slate-900 dark:text-white font-bold" data-location="Sri Lanka">Sri Lanka</span>
                         </div>
