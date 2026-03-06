@@ -1,4 +1,4 @@
-FROM node:24
+FROM node:24-alpine
 
 WORKDIR /app
 
@@ -12,4 +12,4 @@ EXPOSE 3000
 
 ENV HOST=0.0.0.0
 
-CMD ["npm", "run", "dev"]
+CMD ["npm", "run", "dev", "--", "--host", "0.0.0.0"]
