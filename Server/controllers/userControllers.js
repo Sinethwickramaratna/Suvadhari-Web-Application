@@ -1,6 +1,6 @@
 let users = [
-  { id: 1, name: 'John Doe'},
-  { id: 2, name: 'Jane Doe'},
+  { id: 1, name: 'John Doe' },
+  { id: 2, name: 'Jane Doe' },
 ]
 
 const getUsers = (req, res) => {
@@ -11,6 +11,7 @@ const createUser = (req, res) => {
   const newUser = {
     id: users.length + 1,
     name: req.body.name,
+    address: req.body.address,
   };
 
   users.push(newUser);

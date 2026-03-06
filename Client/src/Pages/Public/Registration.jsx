@@ -13,6 +13,7 @@ export default function Registration() {
     const [gender, setGender] = useState('');
     const [doctorHospital, setDoctorHospital] = useState('');
     const [adminHospital, setAdminHospital] = useState('');
+    const [address, setAddress] = useState('');
     const navigate = useNavigate();
 
     const passwordValidations = {
@@ -141,7 +142,7 @@ export default function Registration() {
                             {/* Gender and DOB */}
                             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                                 <div>
-                                    <Dropdown 
+                                    <Dropdown
                                         value={gender}
                                         onChange={setGender}
                                         label="Gender"
@@ -154,8 +155,8 @@ export default function Registration() {
                                     />
                                 </div>
                                 <div>
-                                    <DatePicker 
-                                        value={dateOfBirth} 
+                                    <DatePicker
+                                        value={dateOfBirth}
                                         onChange={setDateOfBirth}
                                         label="Date of Birth"
                                     />
@@ -170,6 +171,19 @@ export default function Registration() {
                                     placeholder="19XXXXXXXXXX"
                                     type="text"
                                 />
+                            </div>
+
+                            {/* Address Field */}
+                            <div className="space-y-1">
+                                <label className="text-xs font-bold uppercase text-slate-400 mb-1 block">Residential Address</label>
+                                <textarea
+                                    className="w-full px-4 py-3 bg-slate-50 border border-slate-100 rounded-xl focus:ring-2 focus:ring-primary/20 focus:border-primary outline-none transition-all text-slate-800 placeholder-slate-400 resize-none"
+                                    placeholder="No. 123, Main Street, Colombo"
+                                    rows="2"
+                                    value={address}
+                                    onChange={(e) => setAddress(e.target.value)}
+                                    required
+                                ></textarea>
                             </div>
 
                             {/* Patient Specific Fields */}
