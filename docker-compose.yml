@@ -1,0 +1,23 @@
+services:
+  backend:
+    build: ./Server
+    ports:
+      - "5000:5000"
+    volumes:
+      - ./Server:/app
+      - /app/node_modules
+    env_file:
+      - ./Server/.env
+    command: npm run dev
+
+  frontend:
+    build: ./Client
+    ports:
+      - "3000:3000"
+    volumes:
+      - ./Client:/app
+      - /app/node_modules
+    env_file:
+      - ./Client/.env
+    depends_on:
+      - backend
