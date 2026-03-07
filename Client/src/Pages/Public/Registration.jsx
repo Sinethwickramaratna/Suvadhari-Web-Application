@@ -42,6 +42,9 @@ export default function Registration() {
     const [address, setAddress] = useState('');
     const [province, setProvince] = useState('');
     const [district, setDistrict] = useState('');
+    const [weight, setWeight] = useState('');
+    const [height, setHeight] = useState('');
+    const [bloodType, setBloodType] = useState('');
     const [loading, setLoading] = useState(false);
     const [error, setError] = useState('');
     const navigate = useNavigate();
@@ -79,6 +82,9 @@ export default function Registration() {
             district,
             idNumber,
             medicalInfo,
+            weight,
+            height,
+            bloodType,
             role: selectedRole
         };
 
@@ -351,6 +357,46 @@ export default function Registration() {
                                             value={idNumber}
                                             onChange={(e) => setIdNumber(e.target.value)}
                                             required
+                                        />
+                                    </div>
+                                    <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                                        <div className="space-y-1">
+                                            <label className="text-xs font-bold uppercase text-slate-400 mb-1 block">Weight (kg)</label>
+                                            <input
+                                                className="w-full px-4 py-3 bg-slate-50 border border-slate-100 rounded-xl focus:ring-2 focus:ring-primary/20 focus:border-primary outline-none transition-all text-slate-800 placeholder-slate-400"
+                                                placeholder="e.g. 70"
+                                                type="number"
+                                                value={weight}
+                                                onChange={(e) => setWeight(e.target.value)}
+                                            />
+                                        </div>
+                                        <div className="space-y-1">
+                                            <label className="text-xs font-bold uppercase text-slate-400 mb-1 block">Height (cm)</label>
+                                            <input
+                                                className="w-full px-4 py-3 bg-slate-50 border border-slate-100 rounded-xl focus:ring-2 focus:ring-primary/20 focus:border-primary outline-none transition-all text-slate-800 placeholder-slate-400"
+                                                placeholder="e.g. 175"
+                                                type="number"
+                                                value={height}
+                                                onChange={(e) => setHeight(e.target.value)}
+                                            />
+                                        </div>
+                                    </div>
+                                    <div className="space-y-1">
+                                        <Dropdown
+                                            value={bloodType}
+                                            onChange={setBloodType}
+                                            label="Blood Type"
+                                            placeholder="Select Blood Type"
+                                            options={[
+                                                { value: 'A+', label: 'A+' },
+                                                { value: 'A-', label: 'A-' },
+                                                { value: 'B+', label: 'B+' },
+                                                { value: 'B-', label: 'B-' },
+                                                { value: 'AB+', label: 'AB+' },
+                                                { value: 'AB-', label: 'AB-' },
+                                                { value: 'O+', label: 'O+' },
+                                                { value: 'O-', label: 'O-' }
+                                            ]}
                                         />
                                     </div>
                                     <div className="space-y-1">
