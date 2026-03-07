@@ -1,0 +1,140 @@
+const User = require("../models/User");
+const PendingRegistration = require("../models/PendingRegistration");
+const VerificationCode = require("../models/VerificationCode");
+const Patient = require("../models/patientModel");
+const Doctor = require("../models/doctorModel");
+const Admin = require("../models/adminModel");
+const Pharmacy = require("../models/pharmacyModel");
+const sendVerificationEmail = require("../utils/sendEmail");
+const bcrypt = require("bcrypt");
+const { nanoid } = require("nanoid");
+const jwt = require("jsonwebtoken");
+
+const generateCode = () => Math.floor(100000 + Math.random() * 900000).toString();
+
+exports.sendCode = async (req, res) => {
+    try {
+        const { email, role, data } = req.body;
+        if (!email) return res.status(400).json({ message: "Email is required" });
+
+        const code = generateCode();
+        const expiresAt = new Date(Date.now() + 5 * 60 * 1000);
+
+        console.log(`[AuthController] Storing pending registration for ${email} (${role})`);
+        await PendingRegistration.deleteMany({ email });
+        await PendingRegistration.create({ email, role, data });
+
+        console.log(`[AuthController] Generating verification code for ${email}`);
+        await VerificationCode.deleteMany({ email });
+        await VerificationCode.create({ email, code, expiresAt });
+
+        console.log(`[AuthController] Sending email to ${email}`);
+        const firstName = data.firstName || "User";
+        await sendVerificationEmail(email, code, firstName, role);
+
+        res.json({ message: "Verification code sent" });
+    } catch (error) {
+        console.error("Error sending code:", error);
+        res.status(500).json({ message: "Error sending verification code" });
+    }
+};
+
+exports.verifyCode = async (req, res) => {
+    try {
+        const { email, code } = req.body;
+        const record = await VerificationCode.findOne({ email, code });
+
+        if (!record) return res.status(400).json({ message: "Invalid code" });
+        if (record.expiresAt < new Date()) {
+            return res.status(400).json({ message: "Code expired" });
+        }
+
+        const pending = await PendingRegistration.findOne({ email });
+        if (!pending) return res.status(400).json({ message: "No pending registration found" });
+
+        const { role, data } = pending;
+        console.log(`[AuthController] Verification success for ${email}. Creating ${role} profile...`);
+
+        // 1. Prepare Profile Data (Sensitive data hashed separately)
+        const hashedIdNumber = await bcrypt.hash(data.idNumber, 10);
+        const hashedPassword = await bcrypt.hash(data.password, 10); // Still needed for User model
+
+        let prefix = "U_";
+        if (role === 'Patient') prefix = "P_";
+        else if (role === 'Doctor') prefix = "D_";
+        else if (role === 'Admin') prefix = "A_";
+        else if (role === 'Pharmacy') prefix = "Ph_";
+
+        const person_pin = prefix + nanoid(10);
+
+        const profileData = {
+            ...data,
+            person_pin,
+            idNumber: hashedIdNumber,
+        };
+
+        if (role === 'Patient') profileData.gender = data.Gender;
+
+        // 2. Create Role-Specific Profile
+        let profile;
+        if (role === 'Patient') profile = new Patient(profileData);
+        else if (role === 'Doctor') profile = new Doctor(profileData);
+        else if (role === 'Admin') profile = new Admin(profileData);
+        else if (role === 'Pharmacy') profile = new Pharmacy(profileData);
+
+        await profile.save();
+        console.log(`[AuthController] ${role} profile created with ID: ${profile._id}`);
+
+        // 3. Create Central User Record
+        const newUser = new User({
+            email,
+            password: hashedPassword,
+            role,
+            profileId: profile._id
+        });
+
+        await newUser.save();
+        console.log(`[AuthController] User record created for ${email}`);
+
+        // 4. Cleanup
+        await VerificationCode.deleteMany({ email });
+        await PendingRegistration.deleteMany({ email });
+
+        res.json({ message: "Account created successfully" });
+    } catch (error) {
+        console.error("Error verifying code:", error);
+        res.status(500).json({ message: "Error during verification" });
+    }
+};
+
+exports.login = async (req, res) => {
+    try {
+        const { email, password } = req.body;
+        const user = await User.findOne({ email });
+
+        if (!user) return res.status(401).json({ message: "Invalid email or password" });
+
+        const isMatch = await bcrypt.compare(password, user.password);
+        if (!isMatch) return res.status(401).json({ message: "Invalid email or password" });
+
+        // Generate JWT
+        const token = jwt.sign(
+            { userId: user._id, role: user.role, profileId: user.profileId },
+            process.env.JWT_SECRET || 'fallback_secret',
+            { expiresIn: '1d' }
+        );
+
+        res.json({
+            message: "Login successful",
+            token,
+            user: {
+                email: user.email,
+                role: user.role,
+                profileId: user.profileId
+            }
+        });
+    } catch (error) {
+        console.error("Login error:", error);
+        res.status(500).json({ message: "Error during login" });
+    }
+};

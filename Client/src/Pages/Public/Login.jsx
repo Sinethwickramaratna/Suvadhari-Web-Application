@@ -1,10 +1,63 @@
 import React, { useState } from 'react';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import Navbar from '../../components/Navbar';
 import Footer from '../../components/Footer';
 
 export default function Login() {
     const [selectedRole, setSelectedRole] = useState('Patient');
+    const [email, setEmail] = useState('');
+    const [password, setPassword] = useState('');
+    const [error, setError] = useState('');
+    const [isLoading, setIsLoading] = useState(false);
+    const [showPassword, setShowPassword] = useState(false);
+    const navigate = useNavigate();
+
+    const handleSubmit = async (e) => {
+        e.preventDefault();
+        setError('');
+        setIsLoading(true);
+
+        console.log(`[Login] Attempting login for ${email} as ${selectedRole}`);
+
+        try {
+            const apiBaseURL = import.meta.env.VITE_API_BASE_URL || 'http://localhost:5000/api';
+            const response = await fetch(`${apiBaseURL}/auth/login`, {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ email, password, role: selectedRole }),
+            });
+
+            const data = await response.json();
+
+            if (!response.ok) {
+                throw new Error(data.message || 'Login failed');
+            }
+
+            console.log('[Login] Success:', data);
+
+            // Store token and user info
+            localStorage.setItem('token', data.token);
+            localStorage.setItem('user', JSON.stringify(data.user));
+
+            // Role-based redirection
+            const roleRoutes = {
+                'Patient': '/patient-dashboard',
+                'Doctor': '/doctor-dashboard',
+                'Admin': '/admin-dashboard',
+                'Pharmacy': '/pharmacy-dashboard'
+            };
+
+            const targetRoute = roleRoutes[data.user.role] || '/dashboard';
+            console.log(`[Login] Redirecting to ${targetRoute}`);
+            navigate(targetRoute);
+
+        } catch (err) {
+            console.error('[Login] Error:', err.message);
+            setError(err.message);
+        } finally {
+            setIsLoading(false);
+        }
+    };
 
     return (
         <div className="hero-gradient min-h-screen flex flex-col font-sans relative overflow-hidden">
@@ -29,7 +82,14 @@ export default function Login() {
                         <p className="text-slate-500 text-lg leading-relaxed">Welcome back! Please enter your details.</p>
                     </div>
 
-                    <form action="#" className="w-full space-y-6 text-left">
+                    {error && (
+                        <div className="w-full mb-6 p-4 bg-red-50 border border-red-100 text-red-600 rounded-xl text-sm font-bold flex items-center gap-2 animate-shake">
+                            <span className="material-symbols-outlined text-xl">error</span>
+                            {error}
+                        </div>
+                    )}
+
+                    <form onSubmit={handleSubmit} className="w-full space-y-6 text-left">
                         {/* Role Selection */}
                         <div className="space-y-3">
                             <label className="text-sm font-bold uppercase text-slate-400 tracking-wider flex items-center gap-2">
@@ -37,34 +97,16 @@ export default function Login() {
                                 Select Role
                             </label>
                             <div className="grid grid-cols-2 sm:grid-cols-4 gap-2 p-1 sm:p-1 bg-slate-50 sm:bg-slate-50 rounded-xl border border-slate-100 relative z-10">
-                                <button
-                                    className={`py-3 sm:py-2 px-2 sm:px-1 text-sm sm:text-xs font-bold rounded-lg transition-all shadow-sm ${selectedRole === 'Patient' ? 'bg-primary text-white' : 'text-slate-500 bg-white sm:bg-transparent hover:bg-slate-200 sm:hover:bg-slate-100 sm:shadow-none border border-slate-100 sm:border-transparent'}`}
-                                    type="button"
-                                    onClick={() => setSelectedRole('Patient')}
-                                >
-                                    Patient
-                                </button>
-                                <button
-                                    className={`py-3 sm:py-2 px-2 sm:px-1 text-sm sm:text-xs font-bold rounded-lg transition-all shadow-sm ${selectedRole === 'Doctor' ? 'bg-primary text-white' : 'text-slate-500 bg-white sm:bg-transparent hover:bg-slate-200 sm:hover:bg-slate-100 sm:shadow-none border border-slate-100 sm:border-transparent'}`}
-                                    type="button"
-                                    onClick={() => setSelectedRole('Doctor')}
-                                >
-                                    Doctor
-                                </button>
-                                <button
-                                    className={`py-3 sm:py-2 px-2 sm:px-1 text-sm sm:text-xs font-bold rounded-lg transition-all shadow-sm ${selectedRole === 'Admin' ? 'bg-primary text-white' : 'text-slate-500 bg-white sm:bg-transparent hover:bg-slate-200 sm:hover:bg-slate-100 sm:shadow-none border border-slate-100 sm:border-transparent'}`}
-                                    type="button"
-                                    onClick={() => setSelectedRole('Admin')}
-                                >
-                                    Admin
-                                </button>
-                                <button
-                                    className={`py-3 sm:py-2 px-2 sm:px-1 text-sm sm:text-xs font-bold rounded-lg transition-all shadow-sm ${selectedRole === 'Pharmacy' ? 'bg-primary text-white' : 'text-slate-500 bg-white sm:bg-transparent hover:bg-slate-200 sm:hover:bg-slate-100 sm:shadow-none border border-slate-100 sm:border-transparent'}`}
-                                    type="button"
-                                    onClick={() => setSelectedRole('Pharmacy')}
-                                >
-                                    Pharmacy
-                                </button>
+                                {['Patient', 'Doctor', 'Admin', 'Pharmacy'].map((role) => (
+                                    <button
+                                        key={role}
+                                        type="button"
+                                        onClick={() => setSelectedRole(role)}
+                                        className={`py-3 sm:py-2 px-2 sm:px-1 text-[11px] font-black rounded-lg transition-all shadow-sm uppercase tracking-tighter ${selectedRole === role ? 'bg-primary text-white scale-105 shadow-lg shadow-primary/20' : 'text-slate-400 bg-white hover:bg-slate-100 border border-slate-100'}`}
+                                    >
+                                        {role}
+                                    </button>
+                                ))}
                             </div>
                         </div>
 
@@ -74,7 +116,15 @@ export default function Login() {
                                 <span className="material-symbols-outlined text-primary text-lg">mail</span>
                                 Email Address
                             </label>
-                            <input className="w-full px-4 py-3 bg-slate-50 border border-slate-100 rounded-xl focus:ring-2 focus:ring-primary/20 focus:border-primary outline-none transition-all text-slate-800 placeholder-slate-400" id="email" placeholder="name@hospital.com" type="email" />
+                            <input
+                                className="w-full px-4 py-3 bg-slate-50 border border-slate-100 rounded-xl focus:ring-2 focus:ring-primary/20 focus:border-primary outline-none transition-all text-slate-800 placeholder-slate-400"
+                                id="email"
+                                placeholder="name@hospital.com"
+                                type="email"
+                                value={email}
+                                onChange={(e) => setEmail(e.target.value)}
+                                required
+                            />
                         </div>
 
                         {/* Password Input */}
@@ -87,9 +137,23 @@ export default function Login() {
                                 <Link className="text-xs font-bold text-primary hover:underline" to="/forgot-password">Forgot Password?</Link>
                             </div>
                             <div className="relative group">
-                                <input className="w-full pl-4 pr-12 py-3 bg-slate-50 border border-slate-100 rounded-xl focus:ring-2 focus:ring-primary/20 focus:border-primary outline-none transition-all text-slate-800 placeholder-slate-400" id="password" placeholder="••••••••" type="password" />
-                                <button className="absolute right-3 top-1/2 -translate-y-1/2 text-slate-400 hover:text-primary" type="button">
-                                    <span className="material-symbols-outlined text-xl">visibility</span>
+                                <input
+                                    className="w-full pl-4 pr-12 py-3 bg-slate-50 border border-slate-100 rounded-xl focus:ring-2 focus:ring-primary/20 focus:border-primary outline-none transition-all text-slate-800 placeholder-slate-400"
+                                    id="password"
+                                    placeholder="••••••••"
+                                    type={showPassword ? 'text' : 'password'}
+                                    value={password}
+                                    onChange={(e) => setPassword(e.target.value)}
+                                    required
+                                />
+                                <button
+                                    className="absolute right-3 top-1/2 -translate-y-1/2 text-slate-400 hover:text-primary"
+                                    type="button"
+                                    onClick={() => setShowPassword(!showPassword)}
+                                >
+                                    <span className="material-symbols-outlined text-xl">
+                                        {showPassword ? 'visibility_off' : 'visibility'}
+                                    </span>
                                 </button>
                             </div>
                         </div>
@@ -101,9 +165,22 @@ export default function Login() {
                         </div>
 
                         {/* Submit Button */}
-                        <button className="w-full bg-primary hover:bg-electric-blue text-white font-bold py-5 px-8 rounded-xl-custom transition-all shadow-xl shadow-blue-500/20 text-lg uppercase flex items-center justify-center gap-2" type="submit">
-                            <span>Sign In</span>
-                            <span className="material-symbols-outlined text-xl">login</span>
+                        <button
+                            className={`w-full bg-primary hover:bg-electric-blue text-white font-bold py-5 px-8 rounded-xl-custom transition-all shadow-xl shadow-primary/20 text-lg uppercase flex items-center justify-center gap-2 ${isLoading ? 'opacity-70 cursor-not-allowed' : ''}`}
+                            type="submit"
+                            disabled={isLoading}
+                        >
+                            {isLoading ? (
+                                <>
+                                    <div className="w-5 h-5 border-2 border-white/30 border-t-white rounded-full animate-spin"></div>
+                                    <span>Signing In...</span>
+                                </>
+                            ) : (
+                                <>
+                                    <span>Sign In</span>
+                                    <span className="material-symbols-outlined text-xl">login</span>
+                                </>
+                            )}
                         </button>
                     </form>
 
