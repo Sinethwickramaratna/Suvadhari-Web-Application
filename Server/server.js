@@ -28,8 +28,8 @@ const authLimiter = rateLimit({
 const authRoutes = require('./routes/authRoutes');
 app.use('/api/auth', authLimiter, authRoutes);
 
-const userRoutes = require('./routes/userRoutes');
-app.use('/api/user', userRoutes);
+// const userRoutes = require('./routes/userRoutes');
+// app.use('/api/user', userRoutes);
 
 const patientRoutes = require('./routes/patientRoutes');
 app.use('/api/patient', patientRoutes);
