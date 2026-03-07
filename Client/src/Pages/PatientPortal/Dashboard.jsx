@@ -19,16 +19,24 @@ const PatientDashboard = () => {
     useEffect(() => {
         const fetchHealthData = async () => {
             if (!user) return;
+            console.log("[Dashboard] Fetching health data for profile:", user.profileId);
             try {
                 const response = await fetch(`${import.meta.env.VITE_API_BASE_URL}/patient/dashboard`, {
                     credentials: 'include'
                 });
+
                 if (response.ok) {
                     const data = await response.json();
+                    console.log("[Dashboard] Health data received:", data.patient);
                     setHealthData(data.patient);
+                } else {
+                    console.error("[Dashboard] Failed to fetch health data. Status:", response.status);
+                    if (response.status === 401) {
+                        console.warn("[Dashboard] Session may have expired or cookie is missing.");
+                    }
                 }
             } catch (err) {
-                console.error("Failed to fetch health data", err);
+                console.error("[Dashboard] Error fetching health data:", err);
             } finally {
                 setIsLoading(false);
             }
@@ -138,8 +146,8 @@ const PatientDashboard = () => {
                         <div className="h-8 w-px bg-slate-200 mx-2"></div>
                         <div className="flex items-center gap-3">
                             <div className="text-right">
-                                <p className="text-sm font-bold text-slate-900">{user.email.split('@')[0]}</p>
-                                <p className="text-[10px] text-slate-500 font-medium uppercase tracking-wider">Patient ID: {user.profileId || 'SV-NEW'}</p>
+                                <h4 className="font-bold text-slate-900 leading-none">{healthData?.name || user.email.split('@')[0]}</h4>
+                                <p className="text-[10px] text-slate-500 font-medium uppercase tracking-wider">Patient ID: {healthData?.patientId || user.profileId || 'SV-NEW'}</p>
                             </div>
                             <div className="w-10 h-10 rounded-xl bg-primary/10 flex items-center justify-center ring-2 ring-primary/20">
                                 <span className="material-symbols-outlined text-primary">person</span>
@@ -153,7 +161,7 @@ const PatientDashboard = () => {
                     <div className="flex flex-col md:flex-row md:items-end justify-between gap-4">
                         <div>
                             <h2 className="text-4xl font-black text-slate-900 tracking-tight">
-                                Welcome, {healthData?.fullName || user.email.split('@')[0]}!
+                                Welcome, {healthData?.name || user.email.split('@')[0]}!
                             </h2>
                             <p className="text-slate-500 mt-2 font-medium">
                                 Age: {healthData?.age || '--'} <span className="mx-2">•</span>
@@ -213,15 +221,18 @@ const PatientDashboard = () => {
                                         </div>
                                     </div>
                                     <div className="space-y-3">
-                                        <h3 className="text-xs font-bold uppercase tracking-widest text-slate-400">Latest Lab Results</h3>
+                                        <h3 className="text-xs font-bold uppercase tracking-widest text-slate-400">Latest Vital Stats</h3>
                                         <div className="space-y-2">
                                             {[
-                                                { label: 'Blood Sugar (HbA1c)', value: '6.8%', color: 'text-red-500' },
-                                                { label: 'Cholesterol', value: '190 mg/dL', color: 'text-green-500' },
-                                                { label: 'Hemoglobin', value: '13.2 g/dL', color: 'text-slate-900' }
+                                                { label: 'Blood Type', value: healthData?.bloodType || '--', color: 'text-red-500', icon: 'bloodtype' },
+                                                { label: 'Current Weight', value: healthData?.weight ? `${healthData.weight} kg` : '--', color: 'text-blue-500', icon: 'monitor_weight' },
+                                                { label: 'Current Height', value: healthData?.height ? `${healthData.height} cm` : '--', color: 'text-slate-900', icon: 'height' }
                                             ].map((res, i) => (
-                                                <div key={i} className="flex items-center justify-between p-3 rounded-xl bg-slate-50">
-                                                    <span className="text-sm font-medium text-slate-600">{res.label}</span>
+                                                <div key={i} className="flex items-center justify-between p-3 rounded-xl bg-slate-50 border border-slate-100/50">
+                                                    <div className="flex items-center gap-2">
+                                                        <span className={`material-symbols-outlined text-sm ${res.color}`}>{res.icon}</span>
+                                                        <span className="text-sm font-medium text-slate-600">{res.label}</span>
+                                                    </div>
                                                     <span className={`text-sm font-black ${res.color}`}>{res.value}</span>
                                                 </div>
                                             ))}

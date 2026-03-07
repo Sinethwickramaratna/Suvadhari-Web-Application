@@ -12,7 +12,8 @@ exports.getDashboard = async (req, res) => {
         res.json({
             message: "Welcome to your dashboard",
             patient: {
-                fullName: patient.fullName,
+                patientId: patient.person_pin,
+                name: patient.firstName + " " + patient.lastName,
                 age: age,
                 weight: patient.weight,
                 height: patient.height,
