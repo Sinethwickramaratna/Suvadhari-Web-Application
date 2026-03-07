@@ -11,6 +11,8 @@ const patientSchema = new mongoose.Schema({
   dateOfBirth: { type: Date, required: true },
   idNumber: { type: String, required: true, unique: true },
   address: { type: String, required: true },
+  province: { type: String, required: true },
+  district: { type: String, required: true },
   medicalInfo: { type: String },
   password: { type: String, required: true },
   createdAt: { type: Date, default: Date.now },

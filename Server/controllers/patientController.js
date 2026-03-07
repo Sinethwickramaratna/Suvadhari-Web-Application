@@ -15,6 +15,8 @@ exports.registerPatient = async (req, res) => {
       dateOfBirth,
       idNumber,
       address,
+      province,
+      district,
       medicalInfo,
       password,
       confirmPassword,
@@ -54,6 +56,8 @@ exports.registerPatient = async (req, res) => {
       dateOfBirth,
       idNumber: hashedIdNumber,
       address,
+      province,
+      district,
       medicalInfo,
       password: hashedPassword,
     });

@@ -15,6 +15,8 @@ exports.registerPharmacy = async (req, res) => {
       Gender,
       dateOfBirth,
       address,
+      province,
+      district,
       idNumber,
       pharmacyLicenseNumber,
       password,
@@ -55,11 +57,13 @@ exports.registerPharmacy = async (req, res) => {
       Gender,
       dateOfBirth,
       address,
+      province,
+      district,
       idNumber: hashedIdNumber,
       pharmacyLicenseNumber,
       password: hashedPassword,
     });
-    
+
     await newPharmacy.save();
     res.status(201).json({ message: 'Pharmacy registered successfully' });
   } catch (error) {

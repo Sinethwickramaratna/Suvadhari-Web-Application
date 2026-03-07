@@ -12,6 +12,8 @@ const pharmacySchema = new mongoose.Schema({
   Gender: { type: String, enum: ['Male', 'Female', 'Other'], required: true },
   dateOfBirth: { type: Date, required: true },
   address: { type: String, required: true },
+  province: { type: String, required: true },
+  district: { type: String, required: true },
   idNumber: { type: String, required: true, unique: true },
   pharmacyLicenseNumber: { type: String, required: true, unique: true },
   password: { type: String, required: true },

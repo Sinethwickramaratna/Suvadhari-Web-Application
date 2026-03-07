@@ -1,6 +1,7 @@
 const express = require('express');
 const dotenv = require('dotenv');
 const cors = require('cors');
+const rateLimit = require('express-rate-limit');
 const connectDB = require('./config/db');
 
 dotenv.config();
@@ -11,6 +12,16 @@ const app = express();
 
 app.use(cors());
 app.use(express.json());
+
+// Rate Limiter for Authentication
+const authLimiter = rateLimit({
+  windowMs: 60 * 1000, // 1 minute
+  max: 5, // 5 requests
+  message: { message: "Too many verification requests. Please try again in a minute." }
+});
+
+const authRoutes = require('./routes/authRoutes');
+app.use('/api/auth', authLimiter, authRoutes);
 
 const userRoutes = require('./routes/userRoutes');
 app.use('/api/user', userRoutes);

@@ -49,7 +49,7 @@ const Footer = () => {
                             <li><a className="text-slate-500 hover:text-primary transition-colors" href="#">Terms &amp; Conditions</a></li>
                         </ul>
                         <h6 className="text-secondary font-bold uppercase tracking-widest text-sm mb-4">Contact Information</h6>
-                        <p className="text-slate-500 text-sm mb-2"><strong>Email:</strong> support@suvadhari.lk</p>
+                        <p className="text-slate-500 text-sm mb-2"><strong>Email:</strong> suvadhari.support@gmail.com</p>
                         <p className="text-slate-500 text-sm mb-2"><strong>Phone:</strong> +94 72 210 5684</p>
                         <p className="text-slate-500 text-sm"><strong>Location:</strong> Sri Lanka</p>
                     </div>

@@ -11,6 +11,8 @@ const doctorSchema = new mongoose.Schema({
   dateOfBirth: { type: Date, required: true },
   idNumber: { type: String, required: true, unique: true },
   address: { type: String, required: true },
+  province: { type: String, required: true },
+  district: { type: String, required: true },
   medicalLicenseNumber: { type: String, required: true, unique: true },
   specialization: { type: String, required: true },
   workingHospital: { type: String, required: true },

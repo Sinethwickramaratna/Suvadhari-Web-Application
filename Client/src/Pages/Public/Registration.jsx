@@ -5,6 +5,18 @@ import Footer from '../../components/Footer';
 import DatePicker from '../../components/DatePicker';
 import Dropdown from '../../components/Dropdown';
 
+const sriLankaProvinces = {
+    "Western Province": ["Colombo", "Gampaha", "Kalutara"],
+    "Central Province": ["Kandy", "Matale", "Nuwara Eliya"],
+    "Southern Province": ["Galle", "Matara", "Hambantota"],
+    "Northern Province": ["Jaffna", "Kilinochchi", "Mannar", "Mullaitivu", "Vavuniya"],
+    "Eastern Province": ["Batticaloa", "Ampara", "Trincomalee"],
+    "North Western Province": ["Kurunegala", "Puttalam"],
+    "North Central Province": ["Anuradhapura", "Polonnaruwa"],
+    "Uva Province": ["Badulla", "Monaragala"],
+    "Sabaragamuwa Province": ["Ratnapura", "Kegalle"]
+};
+
 export default function Registration() {
     const [selectedRole, setSelectedRole] = useState('Patient');
     const [firstName, setFirstName] = useState('');
@@ -28,6 +40,8 @@ export default function Registration() {
     const [pharmacyLicense, setPharmacyLicense] = useState('');
     const [idNumber, setIdNumber] = useState('');
     const [address, setAddress] = useState('');
+    const [province, setProvince] = useState('');
+    const [district, setDistrict] = useState('');
     const [loading, setLoading] = useState(false);
     const [error, setError] = useState('');
     const navigate = useNavigate();
@@ -61,7 +75,8 @@ export default function Registration() {
             Gender: gender ? gender.charAt(0).toUpperCase() + gender.slice(1) : '',
             dateOfBirth,
             address,
-            idNumber,
+            province,
+            district,
             medicalInfo,
             role: selectedRole
         };
@@ -89,24 +104,27 @@ export default function Registration() {
 
         try {
             const apiBaseURL = import.meta.env.VITE_API_BASE_URL;
-            const endpoint = `${apiBaseURL}/${selectedRole.toLowerCase()}/register`;
-
-            const response = await fetch(endpoint, {
+            // Instead of direct registration, we send a verification code
+            const response = await fetch(`${apiBaseURL}/auth/send-code`, {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
                 },
-                body: JSON.stringify(registrationData),
+                body: JSON.stringify({
+                    email: registrationData.email,
+                    role: selectedRole,
+                    data: registrationData
+                }),
             });
 
             const data = await response.json();
 
             if (!response.ok) {
-                throw new Error(data.message || 'Registration failed');
+                throw new Error(data.message || 'Failed to send verification code');
             }
 
-            // Success redirect
-            navigate('/verify-email', { state: { email, source: 'registration' } });
+            // Success - Redirect to verification page with email in state
+            navigate('/verify-email', { state: { email: registrationData.email } });
         } catch (err) {
             setError(err.message);
             console.error('Registration Error:', err);
