@@ -73,7 +73,7 @@ const logger = {
         const logs = getLogs();
         logs.push(createLogEntry('INFO', category, message, data, location));
         saveLogs(logs);
-        console.log(`[INFO] [${category}] ${message} 📍 ${location}`, data || '');
+        console.log(`[INFO] [${category}] ${message}`, data || '');
     },
     
     error: (category, message, error) => {
@@ -86,7 +86,7 @@ const logger = {
         } : error;
         logs.push(createLogEntry('ERROR', category, message, errorData, location));
         saveLogs(logs);
-        console.error(`[ERROR] [${category}] ${message} 📍 ${location}`, errorData);
+        console.error(`[ERROR] [${category}] ${message}`, errorData);
     },
     
     warn: (category, message, data) => {
@@ -94,7 +94,7 @@ const logger = {
         const logs = getLogs();
         logs.push(createLogEntry('WARN', category, message, data, location));
         saveLogs(logs);
-        console.warn(`[WARN] [${category}] ${message} 📍 ${location}`, data || '');
+        console.warn(`[WARN] [${category}] ${message}`, data || '');
     },
     
     debug: (category, message, data) => {
@@ -102,7 +102,7 @@ const logger = {
         const logs = getLogs();
         logs.push(createLogEntry('DEBUG', category, message, data, location));
         saveLogs(logs);
-        console.debug(`[DEBUG] [${category}] ${message} 📍 ${location}`, data || '');
+        console.debug(`[DEBUG] [${category}] ${message}`, data || '');
     },
     
     api: (method, url, status, data) => {
@@ -113,7 +113,7 @@ const logger = {
             ...data
         }, location));
         saveLogs(logs);
-        console.log(`[API] ${method} ${url} - Status: ${status} 📍 ${location}`, data || '');
+        console.log(`[API] ${method} ${url} - Status: ${status}`, data || '');
     },
     
     user: (action, details) => {
@@ -121,7 +121,7 @@ const logger = {
         const logs = getLogs();
         logs.push(createLogEntry('USER', 'User Action', action, details, location));
         saveLogs(logs);
-        console.log(`[USER] ${action} 📍 ${location}`, details || '');
+        console.log(`[USER] ${action}`, details || '');
     },
     
     // Clear all logs

@@ -60,7 +60,7 @@ const logger = {
         const location = getCallerLocation();
         const logEntry = formatLog('INFO', category, message, data, location);
         writeLog(generalLogPath, logEntry);
-        console.log(`[INFO] [${category}] ${message} 📍 ${location}`, data || '');
+        console.log(`[INFO] [${category}] ${message}`, data || '');
     },
     
     error: (category, message, error) => {
@@ -73,7 +73,7 @@ const logger = {
         const logEntry = formatLog('ERROR', category, message, errorData, location);
         writeLog(errorLogPath, logEntry);
         writeLog(generalLogPath, logEntry);
-        console.error(`[ERROR] [${category}] ${message} 📍 ${location}`, errorData);
+        console.error(`[ERROR] [${category}] ${message}`, errorData);
     },
     
     auth: (action, email, success, details) => {
@@ -84,28 +84,28 @@ const logger = {
         }, location);
         writeLog(authLogPath, logEntry);
         writeLog(generalLogPath, logEntry);
-        console.log(`[AUTH] ${action} - ${email} 📍 ${location}`, { success, ...details });
+        console.log(`[AUTH] ${action} - ${email}`, { success, ...details });
     },
     
     database: (operation, collection, details) => {
         const location = getCallerLocation();
         const logEntry = formatLog('DATABASE', 'Database', `${operation} on ${collection}`, details, location);
         writeLog(dbLogPath, logEntry);
-        console.log(`[DATABASE] ${operation} on ${collection} 📍 ${location}`, details || '');
+        console.log(`[DATABASE] ${operation} on ${collection}`, details || '');
     },
     
     warn: (category, message, data) => {
         const location = getCallerLocation();
         const logEntry = formatLog('WARN', category, message, data, location);
         writeLog(generalLogPath, logEntry);
-        console.warn(`[WARN] [${category}] ${message} 📍 ${location}`, data || '');
+        console.warn(`[WARN] [${category}] ${message}`, data || '');
     },
     
     debug: (category, message, data) => {
         const location = getCallerLocation();
         const logEntry = formatLog('DEBUG', category, message, data, location);
         writeLog(generalLogPath, logEntry);
-        console.debug(`[DEBUG] [${category}] ${message} 📍 ${location}`, data || '');
+        console.debug(`[DEBUG] [${category}] ${message}`, data || '');
     }
 };
 
