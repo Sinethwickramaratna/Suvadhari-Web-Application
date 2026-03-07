@@ -31,7 +31,7 @@ const PatientDashboard = () => {
                     </div>
                 </div>
 
-                <nav className="flex-1 px-4 py-6 space-y-2 overflow-y-auto">
+                <nav className="flex-1 px-4 py-6 space-y-2 overflow-y-auto customize-scrollbar">
                     <a className="flex items-center gap-3 px-4 py-3 rounded-xl bg-primary text-white shadow-lg shadow-blue-500/20 font-semibold" href="#">
                         <span className="material-symbols-outlined">dashboard</span>
                         <span className="text-sm font-semibold">Overview</span>
