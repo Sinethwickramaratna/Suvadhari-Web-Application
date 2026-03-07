@@ -3,10 +3,11 @@ import { useNavigate } from 'react-router-dom';
 
 const PatientDashboard = () => {
     const [user, setUser] = useState(null);
+    const [healthData, setHealthData] = useState(null);
+    const [isLoading, setIsLoading] = useState(true);
     const navigate = useNavigate();
 
     useEffect(() => {
-        // Get user from localStorage
         const storedUser = localStorage.getItem('user');
         if (storedUser) {
             setUser(JSON.parse(storedUser));
@@ -14,6 +15,27 @@ const PatientDashboard = () => {
             navigate('/login');
         }
     }, [navigate]);
+
+    useEffect(() => {
+        const fetchHealthData = async () => {
+            if (!user) return;
+            try {
+                const response = await fetch(`${import.meta.env.VITE_API_BASE_URL}/patient/dashboard`, {
+                    credentials: 'include'
+                });
+                if (response.ok) {
+                    const data = await response.json();
+                    setHealthData(data.patient);
+                }
+            } catch (err) {
+                console.error("Failed to fetch health data", err);
+            } finally {
+                setIsLoading(false);
+            }
+        };
+
+        fetchHealthData();
+    }, [user]);
 
     if (!user) return null;
 
@@ -130,8 +152,15 @@ const PatientDashboard = () => {
                     {/* Welcome Section */}
                     <div className="flex flex-col md:flex-row md:items-end justify-between gap-4">
                         <div>
-                            <h2 className="text-4xl font-black text-slate-900 tracking-tight">Welcome, {user.email.split('@')[0]}!</h2>
-                            <p className="text-slate-500 mt-2 font-medium">Age: -- <span className="mx-2">•</span> Blood Type: -- <span className="mx-2">•</span> Weight: --kg</p>
+                            <h2 className="text-4xl font-black text-slate-900 tracking-tight">
+                                Welcome, {healthData?.fullName || user.email.split('@')[0]}!
+                            </h2>
+                            <p className="text-slate-500 mt-2 font-medium">
+                                Age: {healthData?.age || '--'} <span className="mx-2">•</span>
+                                Blood Type: {healthData?.bloodType || '--'} <span className="mx-2">•</span>
+                                Weight: {healthData?.weight ? `${healthData.weight}kg` : '--kg'} <span className="mx-2">•</span>
+                                Height: {healthData?.height ? `${healthData.height}cm` : '--cm'}
+                            </p>
                         </div>
                         <div className="flex gap-2">
                             <button className="px-6 py-3 bg-primary text-white rounded-xl font-bold text-sm shadow-lg shadow-blue-500/30 flex items-center gap-2 hover:bg-blue-600 transition-all font-sans">
