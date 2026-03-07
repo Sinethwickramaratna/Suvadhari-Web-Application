@@ -1,29 +1,27 @@
+const Pharmacy = require('../models/pharmacyModel');
 const bcrypt = require('bcrypt');
-const Doctor = require('../models/doctorModel');
 const { nanoid } = require('nanoid');
 const mongoose = require('mongoose');
 
-exports.registerDoctor = async (req, res) => {
+exports.registerPharmacy = async (req, res) => {
   try {
     const {
       firstName,
       lastName,
       fullName,
+      pharmacyName,
       email,
       phoneNumber,
       Gender,
       dateOfBirth,
-      idNumber,
       address,
-      medicalLicenseNumber,
-      specialization,
-      workingHospital,
-      currentPosition,
+      idNumber,
+      pharmacyLicenseNumber,
       password,
-      confirmPassword,
+      confirmPassword
     } = req.body;
 
-    console.log('Received doctor registration data:', req.body);
+    console.log('Received pharmacy registration data:', req.body);
 
     if (password !== confirmPassword) {
       console.log('Password and confirm password do not match');
@@ -36,36 +34,36 @@ exports.registerDoctor = async (req, res) => {
       return res.status(400).json({ message: 'Password must be at least 8 characters long and contain an uppercase letter, a lowercase letter, a digit, and a special character' });
     }
 
-    const person_pin = "D_" + nanoid(10);
+    const person_pin = "Ph_" + nanoid(10);
     const hashedIdNumber = await bcrypt.hash(idNumber, 10);
-    const existingDoctor = await Doctor.findOne({ $or: [{ email }, { person_pin }, { idNumber: hashedIdNumber }] });
-    if (existingDoctor) {
-      console.log('Doctor with this email, person pin, or ID number already exists');
-      return res.status(400).json({ message: 'Doctor with this email, person pin, or ID number already exists' });
+    const existingPharmacy = await Pharmacy.findOne({ $or: [{ email }, { person_pin }, { idNumber: hashedIdNumber }, { pharmacyLicenseNumber }] });
+
+    if (existingPharmacy) {
+      console.log('Pharmacy with this email, person pin, ID number, or license number already exists');
+      return res.status(400).json({ message: 'Pharmacy with this email, person pin, ID number, or license number already exists' });
     }
 
     const hashedPassword = await bcrypt.hash(password, 10);
-    const newDoctor = new Doctor({
+    const newPharmacy = new Pharmacy({
       person_pin,
       firstName,
       lastName,
       fullName,
+      pharmacyName,
       email,
       phoneNumber,
       Gender,
       dateOfBirth,
-      idNumber: hashedIdNumber,
       address,
-      medicalLicenseNumber,
-      specialization,
-      workingHospital,
-      currentPosition,
+      idNumber: hashedIdNumber,
+      pharmacyLicenseNumber,
       password: hashedPassword,
     });
-    await newDoctor.save();
-    res.status(201).json({ message: 'Doctor registered successfully' });
+    
+    await newPharmacy.save();
+    res.status(201).json({ message: 'Pharmacy registered successfully' });
   } catch (error) {
-    console.error('Error registering doctor:', error);
-    res.status(500).json({ message: 'Internal server error' });
+    console.error('Error registering pharmacy:', error);
+    res.status(500).json({ message: 'Server error' });
   }
-}
+};

@@ -24,6 +24,9 @@ app.use('/api/doctor', doctorRoutes);
 const adminRoutes = require('./routes/adminRoutes');
 app.use('/api/admin', adminRoutes);
 
+const pharmacyRoutes = require('./routes/pharmacyRoutes');
+app.use('/api/pharmacy', pharmacyRoutes);
+
 const PORT = process.env.BACKEND_PORT;
 
 const server = app.listen(PORT, () => {

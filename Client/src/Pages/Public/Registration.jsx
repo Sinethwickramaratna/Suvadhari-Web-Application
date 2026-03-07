@@ -7,15 +7,29 @@ import Dropdown from '../../components/Dropdown';
 
 export default function Registration() {
     const [selectedRole, setSelectedRole] = useState('Patient');
+    const [firstName, setFirstName] = useState('');
+    const [lastName, setLastName] = useState('');
+    const [fullName, setFullName] = useState('');
     const [email, setEmail] = useState('');
+    const [medicalInfo, setMedicalInfo] = useState('');
+    const [phone, setPhone] = useState('');
     const [password, setPassword] = useState('');
+    const [confirmPassword, setConfirmPassword] = useState('');
     const [dateOfBirth, setDateOfBirth] = useState('');
     const [gender, setGender] = useState('');
+    const [doctorLicense, setDoctorLicense] = useState('');
+    const [doctorSpeciality, setDoctorSpeciality] = useState('');
     const [doctorHospital, setDoctorHospital] = useState('');
+    const [doctorPosition, setDoctorPosition] = useState('');
     const [adminHospital, setAdminHospital] = useState('');
+    const [adminStaffID, setAdminStaffID] = useState('');
+    const [adminRole, setAdminRole] = useState('');
+    const [pharmacyName, setPharmacyName] = useState('');
     const [pharmacyLicense, setPharmacyLicense] = useState('');
     const [idNumber, setIdNumber] = useState('');
     const [address, setAddress] = useState('');
+    const [loading, setLoading] = useState(false);
+    const [error, setError] = useState('');
     const navigate = useNavigate();
 
     const passwordValidations = {
@@ -25,11 +39,80 @@ export default function Registration() {
         number: /[0-9]/.test(password)
     };
 
-    const handleSubmit = (e) => {
+    const handleSubmit = async (e) => {
         e.preventDefault();
-        // Here you would normally make an API call to register the user
-        // Afterwards, redirect to email verification
-        navigate('/verify-email', { state: { email, source: 'registration' } });
+
+        if (password !== confirmPassword) {
+            setError('Passwords do not match');
+            return;
+        }
+
+        setLoading(true);
+        setError('');
+
+        const registrationData = {
+            firstName,
+            lastName,
+            fullName,
+            email,
+            phoneNumber: phone,
+            password,
+            confirmPassword,
+            Gender: gender ? gender.charAt(0).toUpperCase() + gender.slice(1) : '',
+            dateOfBirth,
+            address,
+            idNumber,
+            medicalInfo,
+            role: selectedRole
+        };
+
+        // Add role-specific fields
+        if (selectedRole === 'Doctor') {
+            Object.assign(registrationData, {
+                medicalLicenseNumber: doctorLicense,
+                specialization: doctorSpeciality,
+                workingHospital: doctorHospital,
+                currentPosition: doctorPosition
+            });
+        } else if (selectedRole === 'Admin') {
+            Object.assign(registrationData, {
+                hospitalName: adminHospital,
+                staffId: adminStaffID,
+                RoleInHospital: adminRole
+            });
+        } else if (selectedRole === 'Pharmacy') {
+            Object.assign(registrationData, {
+                pharmacyName,
+                pharmacyLicenseNumber: pharmacyLicense
+            });
+        }
+
+        try {
+            const apiBaseURL = import.meta.env.VITE_API_BASE_URL;
+            const endpoint = `${apiBaseURL}/${selectedRole.toLowerCase()}/register`;
+
+            const response = await fetch(endpoint, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify(registrationData),
+            });
+
+            const data = await response.json();
+
+            if (!response.ok) {
+                throw new Error(data.message || 'Registration failed');
+            }
+
+            // Success redirect
+            navigate('/verify-email', { state: { email, source: 'registration' } });
+        } catch (err) {
+            setError(err.message);
+            console.error('Registration Error:', err);
+        } finally {
+            setLoading(false);
+        }
     };
 
     return (
@@ -53,6 +136,12 @@ export default function Registration() {
                             </div>
                             <h1 className="text-3xl font-black mb-2 tracking-tight uppercase text-secondary">Join Our Network</h1>
                             <p className="text-slate-500">Complete your healthcare profile to get started.</p>
+                            {error && (
+                                <div className="mt-4 p-4 bg-red-50 border border-red-100 text-red-600 rounded-xl text-sm font-medium flex items-center gap-2">
+                                    <span className="material-symbols-outlined text-lg">error</span>
+                                    {error}
+                                </div>
+                            )}
                         </div>
 
                         {/* Registration Form */}
@@ -103,6 +192,9 @@ export default function Registration() {
                                         className="w-full px-4 py-3 bg-slate-50 border border-slate-100 rounded-xl focus:ring-2 focus:ring-primary/20 focus:border-primary outline-none transition-all text-slate-800 placeholder-slate-400"
                                         placeholder="John"
                                         type="text"
+                                        value={firstName}
+                                        onChange={(e) => setFirstName(e.target.value)}
+                                        required
                                     />
                                 </div>
                                 <div>
@@ -111,19 +203,23 @@ export default function Registration() {
                                         className="w-full px-4 py-3 bg-slate-50 border border-slate-100 rounded-xl focus:ring-2 focus:ring-primary/20 focus:border-primary outline-none transition-all text-slate-800 placeholder-slate-400"
                                         placeholder="Doe"
                                         type="text"
+                                        value={lastName}
+                                        onChange={(e) => setLastName(e.target.value)}
+                                        required
                                     />
                                 </div>
                             </div>
 
                             {/* Full Legal Name */}
                             <div className="space-y-1">
-                                <label className="text-xs font-bold uppercase text-slate-400 mb-1 block">
-                                    {selectedRole === 'Pharmacy' ? 'Pharmacy Name (Legal)' : 'Full Name (Legal)'}
-                                </label>
+                                <label className="text-xs font-bold uppercase text-slate-400 mb-1 block">Full Name (Legal)</label>
                                 <input
                                     className="w-full px-4 py-3 bg-slate-50 border border-slate-100 rounded-xl focus:ring-2 focus:ring-primary/20 focus:border-primary outline-none transition-all text-slate-800 placeholder-slate-400"
-                                    placeholder={selectedRole === 'Pharmacy' ? 'City Pharma (Pvt) Ltd' : 'Johnathan Quinton Doe'}
+                                    placeholder="Johnathan Quinton Doe"
                                     type="text"
+                                    value={fullName}
+                                    onChange={(e) => setFullName(e.target.value)}
+                                    required
                                 />
                             </div>
 
@@ -146,6 +242,9 @@ export default function Registration() {
                                         className="w-full px-4 py-3 bg-slate-50 border border-slate-100 rounded-xl focus:ring-2 focus:ring-primary/20 focus:border-primary outline-none transition-all text-slate-800 placeholder-slate-400"
                                         placeholder="+94 7X XXX XXXX"
                                         type="tel"
+                                        value={phone}
+                                        onChange={(e) => setPhone(e.target.value)}
+                                        required
                                     />
                                 </div>
                             </div>
@@ -210,6 +309,8 @@ export default function Registration() {
                                             className="w-full px-4 py-3 bg-slate-50 border border-slate-100 rounded-xl focus:ring-2 focus:ring-primary/20 focus:border-primary outline-none transition-all text-slate-800 placeholder-slate-400 resize-none"
                                             placeholder="Please list any allergies or chronic conditions (If any)"
                                             rows="2"
+                                            value={medicalInfo}
+                                            onChange={(e) => setMedicalInfo(e.target.value)}
                                         ></textarea>
                                     </div>
                                 </div>
@@ -236,6 +337,9 @@ export default function Registration() {
                                                 className="w-full px-4 py-3 bg-slate-50 border border-slate-100 rounded-xl focus:ring-2 focus:ring-primary/20 focus:border-primary outline-none transition-all text-slate-800 placeholder-slate-400"
                                                 placeholder="e.g. SLMC-12345"
                                                 type="text"
+                                                value={doctorLicense}
+                                                onChange={(e) => setDoctorLicense(e.target.value)}
+                                                required
                                             />
                                         </div>
                                         <div>
@@ -244,6 +348,9 @@ export default function Registration() {
                                                 className="w-full px-4 py-3 bg-slate-50 border border-slate-100 rounded-xl focus:ring-2 focus:ring-primary/20 focus:border-primary outline-none transition-all text-slate-800 placeholder-slate-400"
                                                 placeholder="e.g. Cardiologist"
                                                 type="text"
+                                                value={doctorSpeciality}
+                                                onChange={(e) => setDoctorSpeciality(e.target.value)}
+                                                required
                                             />
                                         </div>
                                     </div>
@@ -271,6 +378,9 @@ export default function Registration() {
                                                 className="w-full px-4 py-3 bg-slate-50 border border-slate-100 rounded-xl focus:ring-2 focus:ring-primary/20 focus:border-primary outline-none transition-all text-slate-800 placeholder-slate-400"
                                                 placeholder="e.g. Senior Consultant"
                                                 type="text"
+                                                value={doctorPosition}
+                                                onChange={(e) => setDoctorPosition(e.target.value)}
+                                                required
                                             />
                                         </div>
                                     </div>
@@ -315,6 +425,9 @@ export default function Registration() {
                                                 className="w-full px-4 py-3 bg-slate-50 border border-slate-100 rounded-xl focus:ring-2 focus:ring-primary/20 focus:border-primary outline-none transition-all text-slate-800 placeholder-slate-400"
                                                 placeholder="e.g. STF-98765"
                                                 type="text"
+                                                value={adminStaffID}
+                                                onChange={(e) => setAdminStaffID(e.target.value)}
+                                                required
                                             />
                                         </div>
                                         <div>
@@ -323,6 +436,9 @@ export default function Registration() {
                                                 className="w-full px-4 py-3 bg-slate-50 border border-slate-100 rounded-xl focus:ring-2 focus:ring-primary/20 focus:border-primary outline-none transition-all text-slate-800 placeholder-slate-400"
                                                 placeholder="e.g. IT Administrator"
                                                 type="text"
+                                                value={adminRole}
+                                                onChange={(e) => setAdminRole(e.target.value)}
+                                                required
                                             />
                                         </div>
                                     </div>
@@ -332,6 +448,17 @@ export default function Registration() {
                             {/* Pharmacy Specific Fields */}
                             {selectedRole === 'Pharmacy' && (
                                 <div className="space-y-4">
+                                    <div className="space-y-1">
+                                        <label className="text-xs font-bold uppercase text-slate-400 mb-1 block">Pharmacy Name</label>
+                                        <input
+                                            className="w-full px-4 py-3 bg-slate-50 border border-slate-100 rounded-xl focus:ring-2 focus:ring-primary/20 focus:border-primary outline-none transition-all text-slate-800 placeholder-slate-400"
+                                            placeholder="City Pharma (Pvt) Ltd"
+                                            type="text"
+                                            value={pharmacyName}
+                                            onChange={(e) => setPharmacyName(e.target.value)}
+                                            required
+                                        />
+                                    </div>
                                     <div className="space-y-1">
                                         <label className="text-xs font-bold uppercase text-slate-400 mb-1 block">ID Number (National ID/Passport)</label>
                                         <input
@@ -376,6 +503,8 @@ export default function Registration() {
                                         className="w-full px-4 py-3 bg-slate-50 border border-slate-100 rounded-xl focus:ring-2 focus:ring-primary/20 focus:border-primary outline-none transition-all text-slate-800"
                                         type="password"
                                         placeholder="••••••••"
+                                        value={confirmPassword}
+                                        onChange={(e) => setConfirmPassword(e.target.value)}
                                         required
                                     />
                                 </div>
@@ -422,11 +551,15 @@ export default function Registration() {
 
                             {/* Submit Button */}
                             <button
-                                className="w-full bg-primary hover:bg-electric-blue text-white font-bold py-5 px-8 rounded-xl-custom transition-all shadow-xl shadow-blue-500/20 text-lg uppercase flex items-center justify-center gap-2"
+                                className="w-full bg-primary hover:bg-electric-blue text-white font-bold py-5 px-8 rounded-xl-custom transition-all shadow-xl shadow-blue-500/20 text-lg uppercase flex items-center justify-center gap-2 disabled:opacity-50 disabled:cursor-not-allowed"
                                 type="submit"
+                                disabled={loading}
                             >
-                                <span>Register Account</span>
-                                <span className="material-symbols-outlined text-xl">how_to_reg</span>
+                                <span>{loading ? 'Creating Account...' : 'Register Account'}</span>
+                                {!loading && <span className="material-symbols-outlined text-xl">how_to_reg</span>}
+                                {loading && (
+                                    <div className="w-5 h-5 border-2 border-white/30 border-t-white rounded-full animate-spin"></div>
+                                )}
                             </button>
 
                             {/* Login Link */}

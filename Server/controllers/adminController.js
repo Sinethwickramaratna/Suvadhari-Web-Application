@@ -16,6 +16,7 @@ exports.registerAdmin = async (req, res) => {
       address,
       idNumber,
       hospitalName,
+      staffId,
       RoleInHospital,
       password,
       confirmPassword
@@ -55,6 +56,7 @@ exports.registerAdmin = async (req, res) => {
       address,
       idNumber: hashedIdNumber,
       hospitalName,
+      staffId,
       RoleInHospital,
       password: hashedPassword,
     });
