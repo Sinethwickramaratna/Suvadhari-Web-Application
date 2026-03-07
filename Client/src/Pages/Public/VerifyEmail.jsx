@@ -83,20 +83,54 @@ export default function VerifyEmail() {
         }
     };
 
-    const handleSubmit = (e) => {
+    const [loading, setLoading] = useState(false);
+    const [error, setError] = useState('');
+
+    const handleSubmit = async (e) => {
         e.preventDefault();
         const fullCode = code.join('');
-        if (fullCode.length === 6) {
-            console.log('Verifying code:', fullCode);
-            // Here you would typically make an API call to verify the code
+        if (fullCode.length !== 6) return;
 
-            // For now, simulate success:
-            if (location.state?.source === 'registration') {
-                navigate('/registration-success');
-            } else {
-                // Navigate to password reset since source wasn't registration
-                navigate('/reset-password', { state: { email } });
+        setLoading(true);
+        setError('');
+
+        console.log(`[VerifyEmail] Attempting to verify PIN for: ${email}`);
+
+        try {
+            const apiBaseURL = import.meta.env.VITE_API_BASE_URL;
+            const response = await fetch(`${apiBaseURL}/auth/verify-code`, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({
+                    email,
+                    code: fullCode
+                }),
+            });
+
+            const data = await response.json();
+
+            if (!response.ok) {
+                console.error('[VerifyEmail] Verification failed:', data.message);
+                throw new Error(data.message || 'Verification failed');
             }
+
+            console.log('[VerifyEmail] Verification successful!');
+
+            // Success redirection
+            if (location.state?.source === 'registration') {
+                console.log('[VerifyEmail] Redirecting to Registration Success page');
+                navigate('/registration-success', { replace: true });
+            } else {
+                // For forgot password flow
+                console.log('[VerifyEmail] Redirecting to Reset Password page');
+                navigate('/reset-password', { state: { email }, replace: true });
+            }
+        } catch (err) {
+            setError(err.message);
+        } finally {
+            setLoading(false);
         }
     };
 
@@ -128,6 +162,12 @@ export default function VerifyEmail() {
                             <br /><span className="text-sm mt-1 inline-block">Please enter it below to {location.state?.source === 'registration' ? 'verify your account' : 'reset your password'}.</span>
                         </p>
 
+                        {error && (
+                            <div className="w-full bg-red-50 text-red-600 p-4 rounded-xl text-sm font-medium mb-6 border border-red-100 animate-shake">
+                                {error}
+                            </div>
+                        )}
+
                         <form onSubmit={handleSubmit} className="w-full">
                             <div className="flex justify-between gap-1 sm:gap-2 mb-8 w-full">
                                 {code.map((digit, index) => (
@@ -150,9 +190,16 @@ export default function VerifyEmail() {
                                 <button
                                     className="w-full py-4 px-6 bg-primary hover:bg-electric-blue text-white font-bold rounded-xl-custom transition-all shadow-xl shadow-blue-500/30 flex items-center justify-center gap-2 mb-2 disabled:opacity-70 disabled:cursor-not-allowed"
                                     type="submit"
-                                    disabled={code.join('').length !== 6}
+                                    disabled={code.join('').length !== 6 || loading}
                                 >
-                                    Verify PIN
+                                    {loading ? (
+                                        <>
+                                            <span className="animate-spin h-5 w-5 border-2 border-white border-t-transparent rounded-full mr-2"></span>
+                                            Verifying...
+                                        </>
+                                    ) : (
+                                        'Verify PIN'
+                                    )}
                                 </button>
 
                                 <button

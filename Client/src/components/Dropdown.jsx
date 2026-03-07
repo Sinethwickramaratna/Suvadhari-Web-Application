@@ -1,6 +1,6 @@
 import React, { useState, useRef, useEffect } from 'react';
 
-export default function Dropdown({ value, onChange, label, options, placeholder = "Select an option" }) {
+export default function Dropdown({ value, onChange, label, options, placeholder = "Select an option", disabled = false }) {
     const [isOpen, setIsOpen] = useState(false);
     const containerRef = useRef(null);
 
@@ -18,9 +18,9 @@ export default function Dropdown({ value, onChange, label, options, placeholder 
     const selectedLabel = options.find(opt => opt.value === value)?.label || placeholder;
 
     return (
-        <div ref={containerRef} className="space-y-1 relative">
+        <div ref={containerRef} className={`space-y-1 relative ${disabled ? 'opacity-60 pointer-events-none cursor-not-allowed' : ''}`}>
             {label && <label className="text-xs font-bold uppercase text-slate-400 mb-1 block">{label}</label>}
-            
+
             <button
                 type="button"
                 onClick={() => setIsOpen(!isOpen)}

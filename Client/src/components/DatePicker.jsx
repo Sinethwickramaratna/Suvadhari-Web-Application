@@ -4,6 +4,7 @@ export default function DatePicker({ value, onChange, label }) {
     const [isOpen, setIsOpen] = useState(false);
     const [view, setView] = useState('days'); // 'days', 'months', 'years'
     const [currentMonth, setCurrentMonth] = useState(value ? new Date(value) : new Date());
+    const [yearInput, setYearInput] = useState(currentMonth.getFullYear().toString());
     const containerRef = useRef(null);
 
     const years = Array.from({ length: new Date().getFullYear() - 1920 + 1 }, (_, i) => 1920 + i).reverse();
@@ -16,11 +17,15 @@ export default function DatePicker({ value, onChange, label }) {
     const firstDayOfMonth = (date) => new Date(date.getFullYear(), date.getMonth(), 1).getDay();
 
     const handlePrevMonth = () => {
-        setCurrentMonth(new Date(currentMonth.getFullYear(), currentMonth.getMonth() - 1));
+        const prev = new Date(currentMonth.getFullYear(), currentMonth.getMonth() - 1);
+        setCurrentMonth(prev);
+        setYearInput(prev.getFullYear().toString());
     };
 
     const handleNextMonth = () => {
-        setCurrentMonth(new Date(currentMonth.getFullYear(), currentMonth.getMonth() + 1));
+        const next = new Date(currentMonth.getFullYear(), currentMonth.getMonth() + 1);
+        setCurrentMonth(next);
+        setYearInput(next.getFullYear().toString());
     };
 
     const handleDayClick = (day) => {
@@ -39,6 +44,7 @@ export default function DatePicker({ value, onChange, label }) {
 
     const handleYearSelect = (year) => {
         setCurrentMonth(new Date(year, currentMonth.getMonth()));
+        setYearInput(year.toString());
         setView('days');
     };
 
@@ -93,13 +99,37 @@ export default function DatePicker({ value, onChange, label }) {
                             >
                                 {currentMonth.toLocaleDateString('en-US', { month: 'long' })}
                             </button>
-                            <button
-                                type="button"
-                                onClick={() => setView(view === 'years' ? 'days' : 'years')}
-                                className="font-bold text-slate-800 hover:text-primary transition-colors px-1 rounded hover:bg-slate-50"
-                            >
-                                {currentMonth.getFullYear()}
-                            </button>
+                            {view === 'years' ? (
+                                <input
+                                    type="text"
+                                    value={yearInput}
+                                    onChange={(e) => {
+                                        const val = e.target.value.replace(/\D/g, '').slice(0, 4);
+                                        setYearInput(val);
+                                        if (val.length === 4) {
+                                            const year = parseInt(val);
+                                            if (year >= 1900 && year <= 2100) {
+                                                setCurrentMonth(new Date(year, currentMonth.getMonth()));
+                                            }
+                                        }
+                                    }}
+                                    onBlur={() => {
+                                        if (yearInput.length < 4) {
+                                            setYearInput(currentMonth.getFullYear().toString());
+                                        }
+                                    }}
+                                    className="w-16 font-bold text-slate-800 border-b-2 border-primary outline-none text-center bg-transparent"
+                                    autoFocus
+                                />
+                            ) : (
+                                <button
+                                    type="button"
+                                    onClick={() => setView(view === 'years' ? 'days' : 'years')}
+                                    className="font-bold text-slate-800 hover:text-primary transition-colors px-1 rounded hover:bg-slate-50"
+                                >
+                                    {currentMonth.getFullYear()}
+                                </button>
+                            )}
                         </div>
 
                         <button

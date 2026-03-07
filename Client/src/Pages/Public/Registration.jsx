@@ -77,6 +77,7 @@ export default function Registration() {
             address,
             province,
             district,
+            idNumber,
             medicalInfo,
             role: selectedRole
         };
@@ -102,6 +103,9 @@ export default function Registration() {
             });
         }
 
+        console.log(`[Registration] Submitting ${selectedRole} registration for:`, email);
+        console.log('[Registration] Payload prepared:', registrationData);
+
         try {
             const apiBaseURL = import.meta.env.VITE_API_BASE_URL;
             // Instead of direct registration, we send a verification code
@@ -120,11 +124,13 @@ export default function Registration() {
             const data = await response.json();
 
             if (!response.ok) {
+                console.error('[Registration] Server error:', data.message);
                 throw new Error(data.message || 'Failed to send verification code');
             }
 
-            // Success - Redirect to verification page with email in state
-            navigate('/verify-email', { state: { email: registrationData.email } });
+            console.log('[Registration] Verification code sent successfully to:', registrationData.email);
+            // Success - Redirect to verification page with email and source in state
+            navigate('/verify-email', { state: { email: registrationData.email, source: 'registration' } });
         } catch (err) {
             setError(err.message);
             console.error('Registration Error:', err);
@@ -305,6 +311,32 @@ export default function Registration() {
                                     onChange={(e) => setAddress(e.target.value)}
                                     required
                                 ></textarea>
+                            </div>
+
+                            {/* Province and District */}
+                            <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mt-4">
+                                <div>
+                                    <Dropdown
+                                        value={province}
+                                        onChange={(p) => {
+                                            setProvince(p);
+                                            setDistrict(''); // Reset district when province changes
+                                        }}
+                                        label="Province"
+                                        placeholder="Select Province"
+                                        options={Object.keys(sriLankaProvinces).map(p => ({ value: p, label: p }))}
+                                    />
+                                </div>
+                                <div>
+                                    <Dropdown
+                                        value={district}
+                                        onChange={setDistrict}
+                                        label="District"
+                                        placeholder="Select District"
+                                        disabled={!province}
+                                        options={province ? sriLankaProvinces[province].map(d => ({ value: d, label: d })) : []}
+                                    />
+                                </div>
                             </div>
 
                             {/* Patient Specific Fields */}
