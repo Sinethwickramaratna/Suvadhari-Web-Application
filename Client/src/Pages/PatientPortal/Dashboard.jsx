@@ -97,7 +97,15 @@ const PatientDashboard = () => {
                         </button>
                         <button
                             className="w-10 h-10 flex items-center justify-center rounded-xl bg-slate-100 text-slate-600 hover:text-red-600 transition-colors"
-                            onClick={() => {
+                            onClick={async () => {
+                                try {
+                                    await fetch(`${import.meta.env.VITE_API_BASE_URL}/auth/logout`, {
+                                        method: 'POST',
+                                        credentials: 'include'
+                                    });
+                                } catch (err) {
+                                    console.error("Logout failed", err);
+                                }
                                 localStorage.removeItem('user');
                                 navigate('/login');
                             }}

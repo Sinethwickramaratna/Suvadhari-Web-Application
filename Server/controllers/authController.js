@@ -133,7 +133,7 @@ exports.login = async (req, res) => {
         res.cookie('token', token, {
             httpOnly: true,
             secure: process.env.NODE_ENV === 'production',
-            sameSite: 'strict',
+            sameSite: 'Lax', // Safer for cross-origin local dev
             maxAge: parseInt(process.env.JWT_EXPIRES_IN) || 24 * 60 * 60 * 1000 // 1 day
         });
 
@@ -149,4 +149,27 @@ exports.login = async (req, res) => {
         console.error("Login error:", error);
         res.status(500).json({ message: "Error during login" });
     }
+};
+
+exports.getMe = async (req, res) => {
+    try {
+        const user = await User.findById(req.user._id).select("-password");
+        if (!user) return res.status(404).json({ message: "User not found" });
+
+        res.json({
+            user: {
+                email: user.email,
+                role: user.role,
+                profileId: user.profileId
+            }
+        });
+    } catch (error) {
+        console.error("GetMe error:", error);
+        res.status(500).json({ message: "Error retrieving user data" });
+    }
+};
+
+exports.logout = async (req, res) => {
+    res.clearCookie('token');
+    res.json({ message: "Logged out successfully" });
 };

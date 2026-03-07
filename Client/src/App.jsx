@@ -1,5 +1,5 @@
-import React from 'react';
-import { Routes, Route } from 'react-router-dom';
+import React, { useEffect } from 'react';
+import { Routes, Route, useNavigate, useLocation } from 'react-router-dom';
 import HomePage from './Pages/Public/Home Page';
 import HowItWorks from './Pages/Public/HowItWorks';
 import Features from './Pages/Public/Features';
@@ -15,6 +15,37 @@ import ResetPasswordSuccess from './Pages/Public/ResetPasswordSuccess';
 import PatientDashboard from './Pages/PatientPortal/Dashboard';
 
 function App() {
+  const navigate = useNavigate();
+  const location = useLocation();
+
+  useEffect(() => {
+    const checkAuth = async () => {
+      try {
+        const response = await fetch(`${import.meta.env.VITE_API_BASE_URL}/auth/me`, {
+          credentials: 'include'
+        });
+
+        if (response.ok) {
+          const data = await response.json();
+          const user = data.user;
+          localStorage.setItem('user', JSON.stringify(user));
+
+          // Auto-redirect if on public pages (login, home, register)
+          const publicPaths = ['/', '/login', '/register'];
+          if (publicPaths.includes(location.pathname)) {
+            if (user.role === 'Patient') navigate('/patient-dashboard');
+            else if (user.role === 'Doctor') navigate('/doctor-dashboard');
+            else if (user.role === 'Admin') navigate('/admin-dashboard');
+            else if (user.role === 'Pharmacy') navigate('/pharmacy-dashboard');
+          }
+        }
+      } catch (err) {
+        // Not logged in or error, stay on current page
+      }
+    };
+
+    checkAuth();
+  }, [navigate]);
   return (
     <Routes>
       <Route path="/" element={<HomePage />} />
