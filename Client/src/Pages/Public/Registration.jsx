@@ -4,6 +4,7 @@ import Navbar from '../../components/Navbar';
 import Footer from '../../components/Footer';
 import DatePicker from '../../components/DatePicker';
 import Dropdown from '../../components/Dropdown';
+import logger from '../../utils/logger';
 
 const sriLankaProvinces = {
     "Western Province": ["Colombo", "Gampaha", "Kalutara"],
@@ -109,8 +110,8 @@ export default function Registration() {
             });
         }
 
-        console.log(`[Registration] Submitting ${selectedRole} registration for:`, email);
-        console.log('[Registration] Payload prepared:', registrationData);
+        logger.user('Registration Attempt', { email, role: selectedRole });
+        logger.debug('Registration', 'Registration data prepared', { email, role: selectedRole });
 
         try {
             const apiBaseURL = import.meta.env.VITE_API_BASE_URL;
@@ -128,19 +129,21 @@ export default function Registration() {
                 }),
             });
 
+            logger.api('POST', `${apiBaseURL}/auth/send-code`, response.status, { email, role: selectedRole });
+
             const data = await response.json();
 
             if (!response.ok) {
-                console.error('[Registration] Server error:', data.message);
+                logger.error('Registration', 'Server error', new Error(data.message));
                 throw new Error(data.message || 'Failed to send verification code');
             }
 
-            console.log('[Registration] Verification code sent successfully to:', registrationData.email);
+            logger.info('Registration', 'Verification code sent successfully', { email });
             // Success - Redirect to verification page with email and source in state
             navigate('/verify-email', { state: { email: registrationData.email, source: 'registration' } });
         } catch (err) {
+            logger.error('Registration', 'Registration error', err);
             setError(err.message);
-            console.error('Registration Error:', err);
         } finally {
             setLoading(false);
         }

@@ -1,4 +1,5 @@
 const Patient = require('../models/patientModel');
+const logger = require('../utils/logger');
 
 // Profile logic for patients can be added here (e.g., getProfile, updateProfile)
 
@@ -20,9 +21,9 @@ exports.getDashboard = async (req, res) => {
                 bloodType: patient.bloodType,
             },
         });
-        console.log("[PatientController] Dashboard data retrieved successfully");
+        logger.info('Patient', 'Dashboard data retrieved', { patientId: patient.person_pin });
     } catch (error) {
-        console.error("[PatientController] Dashboard error:", error);
+        logger.error('Patient', 'Dashboard error', error);
         res.status(500).json({ message: "Error retrieving dashboard data" });
     }
 };

@@ -1,5 +1,6 @@
 const User = require('../models/User');
 const bcrypt = require('bcrypt');
+const logger = require('../utils/logger');
 
 /**
  * @desc    Get all users
@@ -8,10 +9,12 @@ const bcrypt = require('bcrypt');
  */
 exports.getUsers = async (req, res) => {
     try {
+        logger.info('User', 'Fetching all users', { requestedBy: req.user?.email });
         const users = await User.find().select('-password');
+        logger.info('User', 'Users retrieved successfully', { count: users.length });
         res.status(200).json(users);
     } catch (error) {
-        console.error("GetUsers error:", error);
+        logger.error('User', 'GetUsers error', error);
         res.status(500).json({ message: "Error retrieving users" });
     }
 };
@@ -51,9 +54,10 @@ exports.createUser = async (req, res) => {
         const userResponse = user.toObject();
         delete userResponse.password;
 
+        logger.database('CREATE', 'User', { email, role, profileId });
         res.status(201).json(userResponse);
     } catch (error) {
-        console.error("CreateUser error:", error);
+        logger.error('User', 'CreateUser error', error);
         res.status(500).json({ message: "Error creating user" });
     }
 };

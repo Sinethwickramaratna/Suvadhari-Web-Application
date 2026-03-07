@@ -1,19 +1,20 @@
 const jwt = require("jsonwebtoken");
 const User = require("../models/User");
+const logger = require("../utils/logger");
 
 exports.protect = async (req, res, next) => {
     try {
         let token;
         if (req.headers.authorization && req.headers.authorization.startsWith("Bearer")) {
             token = req.headers.authorization.split(" ")[1];
-            console.log("[AuthMiddleware] Token found in Authorization Header");
+            logger.debug('AuthMiddleware', 'Token found in Authorization Header');
         } else if (req.cookies && req.cookies.token) {
             token = req.cookies.token;
-            console.log("[AuthMiddleware] Token found in Cookies");
+            logger.debug('AuthMiddleware', 'Token found in Cookies');
         }
 
         if (!token) {
-            console.warn("[AuthMiddleware] No token found in request");
+            logger.warn('AuthMiddleware', 'No token found in request');
             return res.status(401).json({ message: "Not authorized to access this route" });
         }
 
@@ -21,23 +22,23 @@ exports.protect = async (req, res, next) => {
         let decoded;
         try {
             decoded = jwt.verify(token, process.env.JWT_SECRET || 'fallback_secret');
-            console.log("[AuthMiddleware] Token verified successfully for user:", decoded.userId);
+            logger.info('AuthMiddleware', 'Token verified successfully', { userId: decoded.userId });
         } catch (err) {
-            console.error("[AuthMiddleware] Token verification failed:", err.message);
+            logger.error('AuthMiddleware', 'Token verification failed', err);
             return res.status(401).json({ message: "Invalid or expired token" });
         }
 
         // Check if user still exists
         const user = await User.findById(decoded.userId);
         if (!user) {
-            console.warn("[AuthMiddleware] User not found for ID:", decoded.userId);
+            logger.warn('AuthMiddleware', 'User not found', { userId: decoded.userId });
             return res.status(401).json({ message: "The user belonging to this token no longer exists" });
         }
 
         req.user = user;
         next();
     } catch (error) {
-        console.error("Critical Auth Middleware Error:", error);
+        logger.error('AuthMiddleware', 'Critical middleware error', error);
         res.status(401).json({ message: "Not authorized" });
     }
 };

@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import Navbar from '../../components/Navbar';
 import Footer from '../../components/Footer';
+import logger from '../../utils/logger';
 
 export default function Login() {
     const [selectedRole, setSelectedRole] = useState('Patient');
@@ -17,7 +18,7 @@ export default function Login() {
         setError('');
         setIsLoading(true);
 
-        console.log(`[Login] Attempting login for ${email} as ${selectedRole}`);
+        logger.user('Login Attempt', { email, role: selectedRole });
 
         try {
             const apiBaseURL = import.meta.env.VITE_API_BASE_URL || 'http://localhost:5000/api';
@@ -28,13 +29,16 @@ export default function Login() {
                 credentials: 'include',
             });
 
+            logger.api('POST', `${apiBaseURL}/auth/login`, response.status, { email, role: selectedRole });
+
             const data = await response.json();
 
             if (!response.ok) {
+                logger.error('Login', 'Login failed', new Error(data.message));
                 throw new Error(data.message || 'Login failed');
             }
 
-            console.log('[Login] Success:', data);
+            logger.info('Login', 'Login successful', { email, role: data.user.role });
 
             // Store user info (token is now in a secure cookie)
             localStorage.setItem('user', JSON.stringify(data.user));
@@ -48,11 +52,11 @@ export default function Login() {
             };
 
             const targetRoute = roleRoutes[data.user.role] || '/dashboard';
-            console.log(`[Login] Redirecting to ${targetRoute}`);
+            logger.user('Login Redirect', { route: targetRoute });
             navigate(targetRoute);
 
         } catch (err) {
-            console.error('[Login] Error:', err.message);
+            logger.error('Login', 'Login error', err);
             setError(err.message);
         } finally {
             setIsLoading(false);

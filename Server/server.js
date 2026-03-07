@@ -3,9 +3,11 @@ const dotenv = require('dotenv');
 const cors = require('cors');
 const rateLimit = require('express-rate-limit');
 const connectDB = require('./config/db');
+const logger = require('./utils/logger');
 
 dotenv.config();
 
+logger.info('Server', 'Application starting', { nodeEnv: process.env.NODE_ENV });
 connectDB();
 
 const app = express();
@@ -45,10 +47,12 @@ app.use('/api/pharmacy', pharmacyRoutes);
 
 const PORT = process.env.BACKEND_PORT;
 
+logger.info('Server', 'Starting Express server', { port: PORT });
+
 const server = app.listen(PORT, () => {
-  console.log(`Server is running on port ${PORT}`);
+  logger.info('Server', 'Server is running', { port: PORT });
 });
 
 server.on('error', (err) => {
-  console.error('Server error:', err);
+  logger.error('Server', 'Server error', err);
 });

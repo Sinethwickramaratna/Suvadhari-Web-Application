@@ -1,7 +1,8 @@
 import React, { useState } from 'react';
-import { Link, useNavigate } from 'react-router-dom';
+import { Link, useNavigate, useLocation } from 'react-router-dom';
 import Navbar from '../../components/Navbar';
 import Footer from '../../components/Footer';
+import logger from '../../utils/logger';
 
 export default function ForgotPassword() {
     const navigate = useNavigate();
@@ -14,22 +15,30 @@ export default function ForgotPassword() {
         setIsLoading(true);
         setError('');
 
+        logger.user('Forgot Password Request', { email });
+
         try {
-            const response = await fetch(`${import.meta.env.VITE_API_BASE_URL}/auth/forgot-password`, {
+            const apiBaseURL = import.meta.env.VITE_API_BASE_URL;
+            const response = await fetch(`${apiBaseURL}/auth/forgot-password`, {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify({ email })
             });
 
+            logger.api('POST', `${apiBaseURL}/auth/forgot-password`, response.status, { email });
+
             const data = await response.json();
 
             if (response.ok) {
+                logger.info('ForgotPassword', 'Reset code sent successfully', { email });
                 // Navigate to Verify Email page, passing the email and source
                 navigate('/verify-email', { state: { email, source: 'forgot-password' } });
             } else {
+                logger.error('ForgotPassword', 'Request failed', new Error(data.message));
                 setError(data.message || 'Something went wrong');
             }
         } catch (err) {
+            logger.error('ForgotPassword', 'Connection error', err);
             setError('Failed to connect to the server');
         } finally {
             setIsLoading(false);

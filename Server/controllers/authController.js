@@ -9,6 +9,7 @@ const sendVerificationEmail = require("../utils/sendEmail");
 const bcrypt = require("bcrypt");
 const { nanoid } = require("nanoid");
 const jwt = require("jsonwebtoken");
+const logger = require("../utils/logger");
 
 const generateCode = () => Math.floor(100000 + Math.random() * 900000).toString();
 
@@ -20,21 +21,22 @@ exports.sendCode = async (req, res) => {
         const code = generateCode();
         const expiresAt = new Date(Date.now() + 5 * 60 * 1000);
 
-        console.log(`[AuthController] Storing pending registration for ${email} (${role})`);
+        logger.info('Auth', 'Storing pending registration', { email, role });
         await PendingRegistration.deleteMany({ email });
         await PendingRegistration.create({ email, role, data });
 
-        console.log(`[AuthController] Generating verification code for ${email}`);
+        logger.info('Auth', 'Generating verification code', { email });
         await VerificationCode.deleteMany({ email });
         await VerificationCode.create({ email, code, expiresAt });
 
-        console.log(`[AuthController] Sending email to ${email}`);
+        logger.info('Auth', 'Sending verification email', { email });
         const firstName = data.firstName || "User";
         await sendVerificationEmail(email, code, firstName, role);
 
+        logger.info('Auth', 'Verification code sent successfully', { email });
         res.json({ message: "Verification code sent" });
     } catch (error) {
-        console.error("Error sending code:", error);
+        logger.error('Auth', 'Error sending verification code', error);
         res.status(500).json({ message: "Error sending verification code" });
     }
 };
@@ -51,7 +53,7 @@ exports.verifyCode = async (req, res) => {
 
         // For Password Reset Flow
         if (isReset) {
-            console.log(`[AuthController] Reset code verified for ${email}`);
+            logger.info('Auth', 'Reset code verified', { email });
             return res.json({ message: "Code verified successfully" });
         }
 
@@ -59,7 +61,7 @@ exports.verifyCode = async (req, res) => {
         if (!pending) return res.status(400).json({ message: "No pending registration found" });
 
         const { role, data } = pending;
-        console.log(`[AuthController] Verification success for ${email}. Creating ${role} profile...`);
+        logger.info('Auth', 'Email verification successful, creating profile', { email, role });
 
         // 1. Prepare Profile Data (Sensitive data hashed separately)
         const hashedIdNumber = await bcrypt.hash(data.idNumber, 10);
@@ -89,7 +91,7 @@ exports.verifyCode = async (req, res) => {
         else if (role === 'Pharmacy') profile = new Pharmacy(profileData);
 
         await profile.save();
-        console.log(`[AuthController] ${role} profile created with ID: ${profile._id}`);
+        logger.database('CREATE', role, { profileId: profile._id, person_pin });
 
         // 3. Create Central User Record
         const newUser = new User({
@@ -100,15 +102,16 @@ exports.verifyCode = async (req, res) => {
         });
 
         await newUser.save();
-        console.log(`[AuthController] User record created for ${email}`);
+        logger.database('CREATE', 'User', { email, role, profileId: person_pin });
 
         // 4. Cleanup
         await VerificationCode.deleteMany({ email });
         await PendingRegistration.deleteMany({ email });
 
+        logger.info('Auth', 'Account created successfully', { email, role });
         res.json({ message: "Account created successfully" });
     } catch (error) {
-        console.error("Error verifying code:", error);
+        logger.error('Auth', 'Error during verification', error);
         res.status(500).json({ message: "Error during verification" });
     }
 };
@@ -126,7 +129,12 @@ exports.login = async (req, res) => {
         }
 
         const isMatch = await bcrypt.compare(password, user.password);
-        if (!isMatch) return res.status(401).json({ message: "Invalid email or password" });
+        if (!isMatch) {
+            logger.auth('LOGIN_FAILED', email, false, { reason: 'Invalid password' });
+            return res.status(401).json({ message: "Invalid email or password" });
+        }
+
+        logger.auth('LOGIN_SUCCESS', email, true, { role });
 
         // Generate JWT
         const token = jwt.sign(
@@ -156,7 +164,7 @@ exports.login = async (req, res) => {
             }
         });
     } catch (error) {
-        console.error("Login error:", error);
+        logger.error('Auth', 'Login error', error);
         res.status(500).json({ message: "Error during login" });
     }
 };
@@ -174,7 +182,7 @@ exports.getMe = async (req, res) => {
             }
         });
     } catch (error) {
-        console.error("GetMe error:", error);
+        logger.error('Auth', 'GetMe error', error);
         res.status(500).json({ message: "Error retrieving user data" });
     }
 };
@@ -207,9 +215,10 @@ exports.forgotPassword = async (req, res) => {
 
         await sendResetEmail(email, code, firstName);
 
+        logger.info('Auth', 'Password reset code sent', { email });
         res.json({ message: "Password reset code sent to your email" });
     } catch (error) {
-        console.error("Forgot password error:", error);
+        logger.error('Auth', 'Forgot password error', error);
         res.status(500).json({ message: "Error processing request" });
     }
 };
@@ -236,15 +245,16 @@ exports.resetPassword = async (req, res) => {
 
         await VerificationCode.deleteMany({ email });
 
+        logger.info('Auth', 'Password reset successful', { email });
         res.json({ message: "Password reset successful. You can now login." });
     } catch (error) {
-        console.error("Reset password error:", error);
+        logger.error('Auth', 'Reset password error', error);
         res.status(500).json({ message: "Error resetting password" });
     }
 };
 
 exports.logout = async (req, res) => {
+    logger.info('Auth', 'User logged out', { userId: req.user?._id });
     res.clearCookie('token');
     res.json({ message: "Logged out successfully" });
-    console.log("[AuthController] User logged out successfully");
 };

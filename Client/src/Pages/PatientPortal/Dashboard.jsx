@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
+import logger from '../../utils/logger';
 
 const PatientDashboard = () => {
     const [user, setUser] = useState(null);
@@ -19,24 +20,26 @@ const PatientDashboard = () => {
     useEffect(() => {
         const fetchHealthData = async () => {
             if (!user) return;
-            console.log("[Dashboard] Fetching health data for profile:", user.profileId);
+            logger.info('Dashboard', 'Fetching health data', { profileId: user.profileId });
             try {
                 const response = await fetch(`${import.meta.env.VITE_API_BASE_URL}/patient/dashboard`, {
                     credentials: 'include'
                 });
 
+                logger.api('GET', `${import.meta.env.VITE_API_BASE_URL}/patient/dashboard`, response.status);
+
                 if (response.ok) {
                     const data = await response.json();
-                    console.log("[Dashboard] Health data received:", data.patient);
+                    logger.info('Dashboard', 'Health data received', { patient: data.patient });
                     setHealthData(data.patient);
                 } else {
-                    console.error("[Dashboard] Failed to fetch health data. Status:", response.status);
+                    logger.error('Dashboard', 'Failed to fetch health data', { status: response.status });
                     if (response.status === 401) {
-                        console.warn("[Dashboard] Session may have expired or cookie is missing.");
+                        logger.warn('Dashboard', 'Session may have expired');
                     }
                 }
             } catch (err) {
-                console.error("[Dashboard] Error fetching health data:", err);
+                logger.error('Dashboard', 'Error fetching health data', err);
             } finally {
                 setIsLoading(false);
             }
@@ -129,12 +132,13 @@ const PatientDashboard = () => {
                             className="w-10 h-10 flex items-center justify-center rounded-xl bg-slate-100 text-slate-600 hover:text-red-600 transition-colors"
                             onClick={async () => {
                                 try {
+                                    logger.user('Logout', { email: user.email });
                                     await fetch(`${import.meta.env.VITE_API_BASE_URL}/auth/logout`, {
                                         method: 'POST',
                                         credentials: 'include'
                                     });
                                 } catch (err) {
-                                    console.error("Logout failed", err);
+                                    logger.error('Dashboard', 'Logout failed', err);
                                 }
                                 localStorage.removeItem('user');
                                 navigate('/login');
