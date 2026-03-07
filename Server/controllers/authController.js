@@ -130,11 +130,15 @@ exports.login = async (req, res) => {
         );
 
         // Set Cookie
+        const maxAge = process.env.JWT_EXPIRES_IN?.endsWith('d')
+            ? parseInt(process.env.JWT_EXPIRES_IN) * 24 * 60 * 60 * 1000
+            : 24 * 60 * 60 * 1000;
+
         res.cookie('token', token, {
             httpOnly: true,
             secure: process.env.NODE_ENV === 'production',
-            sameSite: 'Lax', // Safer for cross-origin local dev
-            maxAge: parseInt(process.env.JWT_EXPIRES_IN) || 24 * 60 * 60 * 1000 // 1 day
+            sameSite: 'Lax',
+            maxAge: maxAge
         });
 
         res.json({
