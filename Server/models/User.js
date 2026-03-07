@@ -18,9 +18,9 @@ const userSchema = new mongoose.Schema({
         required: true
     },
     profileId: {
-        type: mongoose.Schema.Types.ObjectId,
+        type: String,
         required: true,
-        refPath: "role"
+        unique: true
     },
     createdAt: {
         type: Date,

@@ -109,7 +109,7 @@ const PatientDashboard = () => {
                         <div className="flex items-center gap-3">
                             <div className="text-right">
                                 <p className="text-sm font-bold text-slate-900">{user.email.split('@')[0]}</p>
-                                <p className="text-[10px] text-slate-500 font-medium uppercase tracking-wider">Patient ID: {user.profileId?.slice(-6).toUpperCase() || 'SV-NEW'}</p>
+                                <p className="text-[10px] text-slate-500 font-medium uppercase tracking-wider">Patient ID: {user.profileId || 'SV-NEW'}</p>
                             </div>
                             <div className="w-10 h-10 rounded-xl bg-primary/10 flex items-center justify-center ring-2 ring-primary/20">
                                 <span className="material-symbols-outlined text-primary">person</span>

@@ -90,7 +90,7 @@ exports.verifyCode = async (req, res) => {
             email,
             password: hashedPassword,
             role,
-            profileId: profile._id
+            profileId: person_pin
         });
 
         await newUser.save();
