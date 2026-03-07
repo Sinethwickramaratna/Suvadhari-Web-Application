@@ -25,6 +25,7 @@ export default function Login() {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify({ email, password, role: selectedRole }),
+                credentials: 'include',
             });
 
             const data = await response.json();
@@ -35,8 +36,7 @@ export default function Login() {
 
             console.log('[Login] Success:', data);
 
-            // Store token and user info
-            localStorage.setItem('token', data.token);
+            // Store user info (token is now in a secure cookie)
             localStorage.setItem('user', JSON.stringify(data.user));
 
             // Role-based redirection

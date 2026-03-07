@@ -10,8 +10,13 @@ connectDB();
 
 const app = express();
 
-app.use(cors());
+app.use(cors({
+  origin: 'http://localhost:5173', // Adjust to your frontend URL
+  credentials: true
+}));
 app.use(express.json());
+const cookieParser = require('cookie-parser');
+app.use(cookieParser());
 
 // Rate Limiter for Authentication
 const authLimiter = rateLimit({
