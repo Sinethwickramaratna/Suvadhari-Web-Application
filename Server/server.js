@@ -18,11 +18,11 @@ app.use(express.json());
 const cookieParser = require('cookie-parser');
 app.use(cookieParser());
 
-// Rate Limiter for Authentication
+// Rate Limiter for Authentication (Relaxed for dev)
 const authLimiter = rateLimit({
   windowMs: 60 * 1000, // 1 minute
-  max: 5, // 5 requests
-  message: { message: "Too many verification requests. Please try again in a minute." }
+  max: 100, // Increased for dev/testing
+  message: { message: "Too many requests from this IP, please try again after a minute." }
 });
 
 const authRoutes = require('./routes/authRoutes');

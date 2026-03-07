@@ -6,27 +6,38 @@ exports.protect = async (req, res, next) => {
         let token;
         if (req.headers.authorization && req.headers.authorization.startsWith("Bearer")) {
             token = req.headers.authorization.split(" ")[1];
+            console.log("[AuthMiddleware] Token found in Authorization Header");
         } else if (req.cookies && req.cookies.token) {
             token = req.cookies.token;
+            console.log("[AuthMiddleware] Token found in Cookies");
         }
 
         if (!token) {
+            console.warn("[AuthMiddleware] No token found in request");
             return res.status(401).json({ message: "Not authorized to access this route" });
         }
 
         // Verify token
-        const decoded = jwt.verify(token, process.env.JWT_SECRET || 'fallback_secret');
+        let decoded;
+        try {
+            decoded = jwt.verify(token, process.env.JWT_SECRET || 'fallback_secret');
+            console.log("[AuthMiddleware] Token verified successfully for user:", decoded.userId);
+        } catch (err) {
+            console.error("[AuthMiddleware] Token verification failed:", err.message);
+            return res.status(401).json({ message: "Invalid or expired token" });
+        }
 
         // Check if user still exists
         const user = await User.findById(decoded.userId);
         if (!user) {
+            console.warn("[AuthMiddleware] User not found for ID:", decoded.userId);
             return res.status(401).json({ message: "The user belonging to this token no longer exists" });
         }
 
         req.user = user;
         next();
     } catch (error) {
-        console.error("Auth Middleware Error:", error);
+        console.error("Critical Auth Middleware Error:", error);
         res.status(401).json({ message: "Not authorized" });
     }
 };
