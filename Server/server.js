@@ -18,6 +18,12 @@ app.use('/api/user', userRoutes);
 const patientRoutes = require('./routes/patientRoutes');
 app.use('/api/patient', patientRoutes);
 
+const doctorRoutes = require('./routes/doctorRoutes');
+app.use('/api/doctor', doctorRoutes);
+
+const adminRoutes = require('./routes/adminRoutes');
+app.use('/api/admin', adminRoutes);
+
 const PORT = process.env.BACKEND_PORT;
 
 const server = app.listen(PORT, () => {

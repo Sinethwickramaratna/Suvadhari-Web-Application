@@ -36,7 +36,7 @@ export default function Login() {
                                 <span className="material-symbols-outlined text-primary text-lg">person_pin</span>
                                 Select Role
                             </label>
-                            <div className="grid grid-cols-1 sm:grid-cols-3 gap-2 p-1 sm:p-1 bg-slate-50 sm:bg-slate-50 rounded-xl border border-slate-100 relative z-10">
+                            <div className="grid grid-cols-2 sm:grid-cols-4 gap-2 p-1 sm:p-1 bg-slate-50 sm:bg-slate-50 rounded-xl border border-slate-100 relative z-10">
                                 <button
                                     className={`py-3 sm:py-2 px-2 sm:px-1 text-sm sm:text-xs font-bold rounded-lg transition-all shadow-sm ${selectedRole === 'Patient' ? 'bg-primary text-white' : 'text-slate-500 bg-white sm:bg-transparent hover:bg-slate-200 sm:hover:bg-slate-100 sm:shadow-none border border-slate-100 sm:border-transparent'}`}
                                     type="button"
@@ -57,6 +57,13 @@ export default function Login() {
                                     onClick={() => setSelectedRole('Admin')}
                                 >
                                     Admin
+                                </button>
+                                <button
+                                    className={`py-3 sm:py-2 px-2 sm:px-1 text-sm sm:text-xs font-bold rounded-lg transition-all shadow-sm ${selectedRole === 'Pharmacy' ? 'bg-primary text-white' : 'text-slate-500 bg-white sm:bg-transparent hover:bg-slate-200 sm:hover:bg-slate-100 sm:shadow-none border border-slate-100 sm:border-transparent'}`}
+                                    type="button"
+                                    onClick={() => setSelectedRole('Pharmacy')}
+                                >
+                                    Pharmacy
                                 </button>
                             </div>
                         </div>

@@ -13,6 +13,8 @@ export default function Registration() {
     const [gender, setGender] = useState('');
     const [doctorHospital, setDoctorHospital] = useState('');
     const [adminHospital, setAdminHospital] = useState('');
+    const [pharmacyLicense, setPharmacyLicense] = useState('');
+    const [idNumber, setIdNumber] = useState('');
     const [address, setAddress] = useState('');
     const navigate = useNavigate();
 
@@ -61,7 +63,7 @@ export default function Registration() {
                                     <span className="material-symbols-outlined text-primary text-lg">person_pin</span>
                                     Select Role
                                 </label>
-                                <div className="grid grid-cols-3 gap-2 p-1 bg-slate-50 rounded-xl border border-slate-100">
+                                <div className="grid grid-cols-2 md:grid-cols-4 gap-2 p-1 bg-slate-50 rounded-xl border border-slate-100">
                                     <button
                                         className={`py-2 px-1 text-xs font-bold rounded-lg transition-all ${selectedRole === 'Patient' ? 'bg-primary text-white shadow-sm' : 'text-slate-400 hover:bg-slate-100'}`}
                                         type="button"
@@ -82,6 +84,13 @@ export default function Registration() {
                                         onClick={() => setSelectedRole('Admin')}
                                     >
                                         Admin
+                                    </button>
+                                    <button
+                                        className={`py-2 px-1 text-xs font-bold rounded-lg transition-all ${selectedRole === 'Pharmacy' ? 'bg-primary text-white shadow-sm' : 'text-slate-400 hover:bg-slate-100'}`}
+                                        type="button"
+                                        onClick={() => setSelectedRole('Pharmacy')}
+                                    >
+                                        Pharmacy
                                     </button>
                                 </div>
                             </div>
@@ -108,10 +117,12 @@ export default function Registration() {
 
                             {/* Full Legal Name */}
                             <div className="space-y-1">
-                                <label className="text-xs font-bold uppercase text-slate-400 mb-1 block">Full Name (Legal)</label>
+                                <label className="text-xs font-bold uppercase text-slate-400 mb-1 block">
+                                    {selectedRole === 'Pharmacy' ? 'Pharmacy Name (Legal)' : 'Full Name (Legal)'}
+                                </label>
                                 <input
                                     className="w-full px-4 py-3 bg-slate-50 border border-slate-100 rounded-xl focus:ring-2 focus:ring-primary/20 focus:border-primary outline-none transition-all text-slate-800 placeholder-slate-400"
-                                    placeholder="Johnathan Quinton Doe"
+                                    placeholder={selectedRole === 'Pharmacy' ? 'City Pharma (Pvt) Ltd' : 'Johnathan Quinton Doe'}
                                     type="text"
                                 />
                             </div>
@@ -163,22 +174,15 @@ export default function Registration() {
                                 </div>
                             </div>
 
-                            {/* ID Number */}
-                            <div className="space-y-1">
-                                <label className="text-xs font-bold uppercase text-slate-400 mb-1 block">ID Number (National ID/Passport)</label>
-                                <input
-                                    className="w-full px-4 py-3 bg-slate-50 border border-slate-100 rounded-xl focus:ring-2 focus:ring-primary/20 focus:border-primary outline-none transition-all text-slate-800 placeholder-slate-400"
-                                    placeholder="19XXXXXXXXXX"
-                                    type="text"
-                                />
-                            </div>
 
                             {/* Address Field */}
                             <div className="space-y-1">
-                                <label className="text-xs font-bold uppercase text-slate-400 mb-1 block">Residential Address</label>
+                                <label className="text-xs font-bold uppercase text-slate-400 mb-1 block">
+                                    {selectedRole === 'Pharmacy' ? 'Pharmacy Address' : 'Residential Address'}
+                                </label>
                                 <textarea
                                     className="w-full px-4 py-3 bg-slate-50 border border-slate-100 rounded-xl focus:ring-2 focus:ring-primary/20 focus:border-primary outline-none transition-all text-slate-800 placeholder-slate-400 resize-none"
-                                    placeholder="No. 123, Main Street, Colombo"
+                                    placeholder={selectedRole === 'Pharmacy' ? 'No. 123, Galle Road, Colombo 03' : 'No. 123, Main Street, Colombo'}
                                     rows="2"
                                     value={address}
                                     onChange={(e) => setAddress(e.target.value)}
@@ -188,19 +192,43 @@ export default function Registration() {
 
                             {/* Patient Specific Fields */}
                             {selectedRole === 'Patient' && (
-                                <div className="space-y-1">
-                                    <label className="text-xs font-bold uppercase text-slate-400 mb-1 block">Allergies or Medical Conditions</label>
-                                    <textarea
-                                        className="w-full px-4 py-3 bg-slate-50 border border-slate-100 rounded-xl focus:ring-2 focus:ring-primary/20 focus:border-primary outline-none transition-all text-slate-800 placeholder-slate-400 resize-none"
-                                        placeholder="Please list any allergies or chronic conditions (If any)"
-                                        rows="2"
-                                    ></textarea>
+                                <div className="space-y-4">
+                                    <div className="space-y-1">
+                                        <label className="text-xs font-bold uppercase text-slate-400 mb-1 block">ID Number (National ID/Passport)</label>
+                                        <input
+                                            className="w-full px-4 py-3 bg-slate-50 border border-slate-100 rounded-xl focus:ring-2 focus:ring-primary/20 focus:border-primary outline-none transition-all text-slate-800 placeholder-slate-400"
+                                            placeholder="19XXXXXXXXXX"
+                                            type="text"
+                                            value={idNumber}
+                                            onChange={(e) => setIdNumber(e.target.value)}
+                                            required
+                                        />
+                                    </div>
+                                    <div className="space-y-1">
+                                        <label className="text-xs font-bold uppercase text-slate-400 mb-1 block">Allergies or Medical Conditions</label>
+                                        <textarea
+                                            className="w-full px-4 py-3 bg-slate-50 border border-slate-100 rounded-xl focus:ring-2 focus:ring-primary/20 focus:border-primary outline-none transition-all text-slate-800 placeholder-slate-400 resize-none"
+                                            placeholder="Please list any allergies or chronic conditions (If any)"
+                                            rows="2"
+                                        ></textarea>
+                                    </div>
                                 </div>
                             )}
 
                             {/* Doctor Specific Fields */}
                             {selectedRole === 'Doctor' && (
                                 <div className="space-y-4">
+                                    <div className="space-y-1">
+                                        <label className="text-xs font-bold uppercase text-slate-400 mb-1 block">ID Number (National ID/Passport)</label>
+                                        <input
+                                            className="w-full px-4 py-3 bg-slate-50 border border-slate-100 rounded-xl focus:ring-2 focus:ring-primary/20 focus:border-primary outline-none transition-all text-slate-800 placeholder-slate-400"
+                                            placeholder="19XXXXXXXXXX"
+                                            type="text"
+                                            value={idNumber}
+                                            onChange={(e) => setIdNumber(e.target.value)}
+                                            required
+                                        />
+                                    </div>
                                     <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                                         <div>
                                             <label className="text-xs font-bold uppercase text-slate-400 mb-1 block">Medical License ID</label>
@@ -253,6 +281,17 @@ export default function Registration() {
                             {selectedRole === 'Admin' && (
                                 <div className="space-y-4">
                                     <div className="space-y-1">
+                                        <label className="text-xs font-bold uppercase text-slate-400 mb-1 block">ID Number (National ID/Passport)</label>
+                                        <input
+                                            className="w-full px-4 py-3 bg-slate-50 border border-slate-100 rounded-xl focus:ring-2 focus:ring-primary/20 focus:border-primary outline-none transition-all text-slate-800 placeholder-slate-400"
+                                            placeholder="19XXXXXXXXXX"
+                                            type="text"
+                                            value={idNumber}
+                                            onChange={(e) => setIdNumber(e.target.value)}
+                                            required
+                                        />
+                                    </div>
+                                    <div className="space-y-1">
                                         <Dropdown
                                             value={adminHospital}
                                             onChange={setAdminHospital}
@@ -286,6 +325,34 @@ export default function Registration() {
                                                 type="text"
                                             />
                                         </div>
+                                    </div>
+                                </div>
+                            )}
+
+                            {/* Pharmacy Specific Fields */}
+                            {selectedRole === 'Pharmacy' && (
+                                <div className="space-y-4">
+                                    <div className="space-y-1">
+                                        <label className="text-xs font-bold uppercase text-slate-400 mb-1 block">ID Number (National ID/Passport)</label>
+                                        <input
+                                            className="w-full px-4 py-3 bg-slate-50 border border-slate-100 rounded-xl focus:ring-2 focus:ring-primary/20 focus:border-primary outline-none transition-all text-slate-800 placeholder-slate-400"
+                                            placeholder="19XXXXXXXXXX"
+                                            type="text"
+                                            value={idNumber}
+                                            onChange={(e) => setIdNumber(e.target.value)}
+                                            required
+                                        />
+                                    </div>
+                                    <div className="space-y-1">
+                                        <label className="text-xs font-bold uppercase text-slate-400 mb-1 block">Pharmacy License ID</label>
+                                        <input
+                                            className="w-full px-4 py-3 bg-slate-50 border border-slate-100 rounded-xl focus:ring-2 focus:ring-primary/20 focus:border-primary outline-none transition-all text-slate-800 placeholder-slate-400"
+                                            placeholder="e.g. PHAR-54321"
+                                            type="text"
+                                            value={pharmacyLicense}
+                                            onChange={(e) => setPharmacyLicense(e.target.value)}
+                                            required
+                                        />
                                     </div>
                                 </div>
                             )}
