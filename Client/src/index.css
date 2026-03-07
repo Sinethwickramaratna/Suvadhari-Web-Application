@@ -59,9 +59,15 @@
   }
 }
 
-@utility dna-pattern {
-  background-image: radial-gradient(circle at 2px 2px, rgba(41, 122, 245, 0.03) 1px, transparent 0);
-  background-size: 40px 40px;
+@utility dna-bg {
+  background-image: radial-gradient(circle at 2px 2px, rgba(37, 99, 235, 0.03) 1px, transparent 0);
+  background-size: 32px 32px;
+}
+
+@utility glass-header {
+  background: rgba(255, 255, 255, 0.8);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
 }
 
 @utility bg-medical-pattern {
@@ -183,14 +189,17 @@
   &::-webkit-scrollbar {
     width: 4px;
   }
+
   &::-webkit-scrollbar-track {
     background: #f1f5f9;
     border-radius: 10px;
   }
+
   &::-webkit-scrollbar-thumb {
     background: #cbd5e1;
     border-radius: 10px;
   }
+
   &::-webkit-scrollbar-thumb:hover {
     background: #94a3b8;
   }

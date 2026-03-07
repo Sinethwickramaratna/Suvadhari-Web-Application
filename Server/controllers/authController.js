@@ -109,10 +109,15 @@ exports.verifyCode = async (req, res) => {
 
 exports.login = async (req, res) => {
     try {
-        const { email, password } = req.body;
+        const { email, password, role } = req.body;
         const user = await User.findOne({ email });
 
         if (!user) return res.status(401).json({ message: "Invalid email or password" });
+
+        // Verify role match
+        if (user.role !== role) {
+            return res.status(401).json({ message: `Access denied. This account is registered as a ${user.role}.` });
+        }
 
         const isMatch = await bcrypt.compare(password, user.password);
         if (!isMatch) return res.status(401).json({ message: "Invalid email or password" });

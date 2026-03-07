@@ -12,6 +12,7 @@ import VerifyEmail from './Pages/Public/VerifyEmail';
 import RegistrationSuccess from './Pages/Public/RegistrationSuccess';
 import ResetPassword from './Pages/Public/ResetPassword';
 import ResetPasswordSuccess from './Pages/Public/ResetPasswordSuccess';
+import PatientDashboard from './Pages/PatientPortal/Dashboard';
 
 function App() {
   return (
@@ -28,6 +29,7 @@ function App() {
       <Route path="/registration-success" element={<RegistrationSuccess />} />
       <Route path="/reset-password" element={<ResetPassword />} />
       <Route path="/reset-password-success" element={<ResetPasswordSuccess />} />
+      <Route path="/patient-dashboard" element={<PatientDashboard />} />
     </Routes>
   );
 }
