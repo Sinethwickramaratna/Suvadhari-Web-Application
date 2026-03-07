@@ -12,6 +12,12 @@ VERIFY CODE & SAVE DATA
 */
 router.post("/verify-code", authController.verifyCode);
 
+/*
+PASSWORD RESET
+*/
+router.post("/forgot-password", authController.forgotPassword);
+router.post("/reset-password", authController.resetPassword);
+
 const { protect } = require("../middleware/authMiddleware");
 
 /*

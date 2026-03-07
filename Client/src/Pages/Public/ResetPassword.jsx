@@ -1,12 +1,19 @@
-import React, { useState } from 'react';
-import { Link, useNavigate } from 'react-router-dom';
+import { Link, useNavigate, useLocation } from 'react-router-dom';
 import Navbar from '../../components/Navbar';
 import Footer from '../../components/Footer';
 
 export default function ResetPassword() {
+    const location = useLocation();
+    const navigate = useNavigate();
+
+    const [email, setEmail] = useState(location.state?.email || '');
+    const [code, setCode] = useState('');
     const [showPassword, setShowPassword] = useState(false);
     const [showConfirmPassword, setShowConfirmPassword] = useState(false);
     const [password, setPassword] = useState('');
+    const [confirmPassword, setConfirmPassword] = useState('');
+    const [isLoading, setIsLoading] = useState(false);
+    const [error, setError] = useState('');
 
     const validations = {
         length: password.length >= 8,
@@ -15,20 +22,46 @@ export default function ResetPassword() {
         number: /[0-9]/.test(password)
     };
 
-    const navigate = useNavigate();
-
-    const handleSubmit = (e) => {
+    const handleSubmit = async (e) => {
         e.preventDefault();
 
-        // Prevent submission if validations fail
         if (!validations.length || !validations.special || !validations.uppercase || !validations.number) {
+            setError('Please meet all password requirements');
             return;
         }
 
-        // Here you would typically make an API call to reset the password
+        if (password !== confirmPassword) {
+            setError('Passwords do not match');
+            return;
+        }
 
-        // On success, redirect to success page
-        navigate('/reset-password-success');
+        if (!code) {
+            setError('Verification code is required');
+            return;
+        }
+
+        setIsLoading(true);
+        setError('');
+
+        try {
+            const response = await fetch(`${import.meta.env.VITE_API_BASE_URL}/auth/reset-password`, {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ email, code, newPassword: password })
+            });
+
+            const data = await response.json();
+
+            if (response.ok) {
+                navigate('/reset-password-success');
+            } else {
+                setError(data.message || 'Error resetting password');
+            }
+        } catch (err) {
+            setError('Failed to connect to the server');
+        } finally {
+            setIsLoading(false);
+        }
     };
 
     return (
@@ -55,6 +88,47 @@ export default function ResetPassword() {
                     </div>
 
                     <form onSubmit={handleSubmit} className="w-full space-y-6 text-left">
+                        {error && (
+                            <div className="bg-red-50 text-red-600 p-4 rounded-xl text-sm font-bold border border-red-100 flex items-center gap-2">
+                                <span className="material-symbols-outlined">error</span>
+                                {error}
+                            </div>
+                        )}
+
+                        {/* Email Field (ReadOnly) */}
+                        <div className="space-y-2">
+                            <label className="text-sm font-bold uppercase text-slate-400 tracking-wider flex items-center gap-2" htmlFor="email">
+                                <span className="material-symbols-outlined text-primary text-lg">mail</span>
+                                Email Address
+                            </label>
+                            <input
+                                className="w-full px-4 py-3 bg-slate-100 border border-slate-100 rounded-xl outline-none text-slate-500 cursor-not-allowed"
+                                id="email"
+                                type="email"
+                                value={email}
+                                readOnly
+                            />
+                        </div>
+
+                        {/* Verification Code Field */}
+                        <div className="space-y-2">
+                            <label className="text-sm font-bold uppercase text-slate-400 tracking-wider flex items-center gap-2" htmlFor="code">
+                                <span className="material-symbols-outlined text-primary text-lg">verified</span>
+                                Verification Code
+                            </label>
+                            <input
+                                className="w-full px-4 py-3 bg-slate-50 border border-slate-100 rounded-xl focus:ring-2 focus:ring-primary/20 focus:border-primary outline-none transition-all text-slate-800 placeholder-slate-400 text-center tracking-[8px] font-mono text-xl"
+                                id="code"
+                                placeholder="000000"
+                                type="text"
+                                maxLength="6"
+                                value={code}
+                                onChange={(e) => setCode(e.target.value)}
+                                required
+                            />
+                            <p className="text-[10px] text-slate-400 font-medium text-center uppercase tracking-wider">Enter the 6-digit code sent to your email</p>
+                        </div>
+
                         {/* New Password Field */}
                         <div className="space-y-2">
                             <label className="text-sm font-bold uppercase text-slate-400 tracking-wider flex items-center gap-2" htmlFor="new-password">
@@ -70,6 +144,7 @@ export default function ResetPassword() {
                                     type={showPassword ? "text" : "password"}
                                     value={password}
                                     onChange={(e) => setPassword(e.target.value)}
+                                    required
                                 />
                                 <button
                                     className="absolute right-3 top-1/2 -translate-y-1/2 text-slate-400 hover:text-primary"
@@ -94,6 +169,9 @@ export default function ResetPassword() {
                                     name="confirm-password"
                                     placeholder="Confirm new password"
                                     type={showConfirmPassword ? "text" : "password"}
+                                    value={confirmPassword}
+                                    onChange={(e) => setConfirmPassword(e.target.value)}
+                                    required
                                 />
                                 <button
                                     className="absolute right-3 top-1/2 -translate-y-1/2 text-slate-400 hover:text-primary"
@@ -148,10 +226,19 @@ export default function ResetPassword() {
                         <button
                             className="w-full py-5 px-8 bg-primary hover:bg-electric-blue text-white font-bold rounded-xl-custom shadow-xl shadow-blue-500/20 transition-all text-lg uppercase flex items-center justify-center gap-2 active:scale-[0.98] disabled:opacity-50 disabled:cursor-not-allowed"
                             type="submit"
-                            disabled={!validations.length || !validations.special || !validations.uppercase || !validations.number || showConfirmPassword === ''} // also checking conditionally if wanted
+                            disabled={isLoading || !validations.length || !validations.special || !validations.uppercase || !validations.number}
                         >
-                            <span>Update Password</span>
-                            <span className="material-symbols-outlined text-xl">check_circle</span>
+                            {isLoading ? (
+                                <>
+                                    <div className="w-5 h-5 border-2 border-white/30 border-t-white rounded-full animate-spin"></div>
+                                    <span>Updating...</span>
+                                </>
+                            ) : (
+                                <>
+                                    <span>Update Password</span>
+                                    <span className="material-symbols-outlined text-xl">check_circle</span>
+                                </>
+                            )}
                         </button>
                     </form>
 

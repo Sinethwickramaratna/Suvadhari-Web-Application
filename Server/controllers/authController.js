@@ -173,7 +173,72 @@ exports.getMe = async (req, res) => {
     }
 };
 
+const sendResetEmail = require("../utils/sendResetEmail");
+
+exports.forgotPassword = async (req, res) => {
+    try {
+        const { email } = req.body;
+        if (!email) return res.status(400).json({ message: "Email is required" });
+
+        const user = await User.findOne({ email });
+        if (!user) return res.status(404).json({ message: "No account found with this email" });
+
+        const code = generateCode();
+        const expiresAt = new Date(Date.now() + 10 * 60 * 1000); // 10 mins
+
+        await VerificationCode.deleteMany({ email });
+        await VerificationCode.create({ email, code, expiresAt });
+
+        // Get firstName for the email
+        let firstName = "User";
+        if (user.role === 'Patient') {
+            const patient = await Patient.findOne({ person_pin: user.profileId });
+            firstName = patient?.firstName || "User";
+        } else if (user.role === 'Doctor') {
+            const doctor = await Doctor.findOne({ person_pin: user.profileId });
+            firstName = doctor?.firstName || "User";
+        }
+
+        await sendResetEmail(email, code, firstName);
+
+        res.json({ message: "Password reset code sent to your email" });
+    } catch (error) {
+        console.error("Forgot password error:", error);
+        res.status(500).json({ message: "Error processing request" });
+    }
+};
+
+exports.resetPassword = async (req, res) => {
+    try {
+        const { email, code, newPassword } = req.body;
+        if (!email || !code || !newPassword) {
+            return res.status(400).json({ message: "All fields are required" });
+        }
+
+        const record = await VerificationCode.findOne({ email, code });
+        if (!record) return res.status(400).json({ message: "Invalid or incorrect code" });
+        if (record.expiresAt < new Date()) {
+            return res.status(400).json({ message: "Token has expired" });
+        }
+
+        const user = await User.findOne({ email });
+        if (!user) return res.status(404).json({ message: "User not found" });
+
+        const hashedPassword = await bcrypt.hash(newPassword, 10);
+        user.password = hashedPassword;
+        await user.save();
+
+        await VerificationCode.deleteMany({ email });
+
+        res.json({ message: "Password reset successful. You can now login." });
+    } catch (error) {
+        console.error("Reset password error:", error);
+        res.status(500).json({ message: "Error resetting password" });
+    }
+};
+
 exports.logout = async (req, res) => {
     res.clearCookie('token');
     res.json({ message: "Logged out successfully" });
+    console.log("[AuthController] User logged out successfully");
 };

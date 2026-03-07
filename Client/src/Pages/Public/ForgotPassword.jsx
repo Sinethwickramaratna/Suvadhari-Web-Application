@@ -6,11 +6,34 @@ import Footer from '../../components/Footer';
 export default function ForgotPassword() {
     const navigate = useNavigate();
     const [email, setEmail] = useState('');
+    const [isLoading, setIsLoading] = useState(false);
+    const [error, setError] = useState('');
 
-    const handleSubmit = (e) => {
+    const handleSubmit = async (e) => {
         e.preventDefault();
-        // Simply navigate to the next step, passing the email in state
-        navigate('/verify-email', { state: { email } });
+        setIsLoading(true);
+        setError('');
+
+        try {
+            const response = await fetch(`${import.meta.env.VITE_API_BASE_URL}/auth/forgot-password`, {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ email })
+            });
+
+            const data = await response.json();
+
+            if (response.ok) {
+                // Navigate to Reset Password page, passing the email
+                navigate('/reset-password', { state: { email } });
+            } else {
+                setError(data.message || 'Something went wrong');
+            }
+        } catch (err) {
+            setError('Failed to connect to the server');
+        } finally {
+            setIsLoading(false);
+        }
     };
 
     return (
@@ -38,6 +61,12 @@ export default function ForgotPassword() {
                         </div>
 
                         <form className="w-full space-y-6 text-left" onSubmit={handleSubmit}>
+                            {error && (
+                                <div className="bg-red-50 text-red-600 p-4 rounded-xl text-sm font-bold border border-red-100 flex items-center gap-2">
+                                    <span className="material-symbols-outlined">error</span>
+                                    {error}
+                                </div>
+                            )}
                             <div className="space-y-2">
                                 <label className="text-sm font-bold uppercase text-slate-400 tracking-wider flex items-center gap-2" htmlFor="email">
                                     <span className="material-symbols-outlined text-primary text-lg">mail</span>
@@ -51,11 +80,25 @@ export default function ForgotPassword() {
                                     value={email}
                                     onChange={(e) => setEmail(e.target.value)}
                                     required
+                                    disabled={isLoading}
                                 />
                             </div>
-                            <button className="w-full py-5 px-8 bg-primary hover:bg-electric-blue text-white font-bold rounded-xl-custom shadow-xl shadow-blue-500/20 transition-all text-lg uppercase flex items-center justify-center gap-2 active:scale-[0.98]" type="submit">
-                                <span>Send Reset Link</span>
-                                <span className="material-symbols-outlined text-xl">arrow_forward</span>
+                            <button
+                                className="w-full py-5 px-8 bg-primary hover:bg-electric-blue text-white font-bold rounded-xl-custom shadow-xl shadow-blue-500/20 transition-all text-lg uppercase flex items-center justify-center gap-2 active:scale-[0.98] disabled:opacity-70 disabled:cursor-not-allowed"
+                                type="submit"
+                                disabled={isLoading}
+                            >
+                                {isLoading ? (
+                                    <>
+                                        <div className="w-5 h-5 border-2 border-white/30 border-t-white rounded-full animate-spin"></div>
+                                        <span>Sending...</span>
+                                    </>
+                                ) : (
+                                    <>
+                                        <span>Send Reset Code</span>
+                                        <span className="material-symbols-outlined text-xl">arrow_forward</span>
+                                    </>
+                                )}
                             </button>
                         </form>
 
