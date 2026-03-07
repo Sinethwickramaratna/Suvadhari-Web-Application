@@ -20,8 +20,9 @@ exports.getDashboard = async (req, res) => {
                 bloodType: patient.bloodType,
             },
         });
+        console.log("[PatientController] Dashboard data retrieved successfully");
     } catch (error) {
-        console.error("Dashboard error:", error);
+        console.error("[PatientController] Dashboard error:", error);
         res.status(500).json({ message: "Error retrieving dashboard data" });
     }
 };

@@ -24,8 +24,8 @@ export default function ForgotPassword() {
             const data = await response.json();
 
             if (response.ok) {
-                // Navigate to Reset Password page, passing the email
-                navigate('/reset-password', { state: { email } });
+                // Navigate to Verify Email page, passing the email and source
+                navigate('/verify-email', { state: { email, source: 'forgot-password' } });
             } else {
                 setError(data.message || 'Something went wrong');
             }

@@ -41,12 +41,18 @@ exports.sendCode = async (req, res) => {
 
 exports.verifyCode = async (req, res) => {
     try {
-        const { email, code } = req.body;
+        const { email, code, isReset } = req.body;
         const record = await VerificationCode.findOne({ email, code });
 
         if (!record) return res.status(400).json({ message: "Invalid code" });
         if (record.expiresAt < new Date()) {
             return res.status(400).json({ message: "Code expired" });
+        }
+
+        // For Password Reset Flow
+        if (isReset) {
+            console.log(`[AuthController] Reset code verified for ${email}`);
+            return res.json({ message: "Code verified successfully" });
         }
 
         const pending = await PendingRegistration.findOne({ email });
