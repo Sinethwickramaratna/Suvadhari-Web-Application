@@ -120,6 +120,7 @@ export default function Registration() {
                 headers: {
                     'Content-Type': 'application/json',
                 },
+                credentials: 'include',
                 body: JSON.stringify({
                     email: registrationData.email,
                     role: selectedRole,
