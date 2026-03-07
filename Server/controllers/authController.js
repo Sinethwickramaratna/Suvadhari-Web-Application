@@ -121,7 +121,7 @@ exports.login = async (req, res) => {
         const token = jwt.sign(
             { userId: user._id, role: user.role, profileId: user.profileId },
             process.env.JWT_SECRET || 'fallback_secret',
-            { expiresIn: '1d' }
+            { expiresIn: process.env.JWT_EXPIRES_IN || '1d' }
         );
 
         // Set Cookie
@@ -129,7 +129,7 @@ exports.login = async (req, res) => {
             httpOnly: true,
             secure: process.env.NODE_ENV === 'production',
             sameSite: 'strict',
-            maxAge: 24 * 60 * 60 * 1000 // 1 day
+            maxAge: parseInt(process.env.JWT_EXPIRES_IN) || 24 * 60 * 60 * 1000 // 1 day
         });
 
         res.json({
