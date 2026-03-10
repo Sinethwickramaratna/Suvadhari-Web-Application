@@ -12,7 +12,7 @@ const adminSchema = new mongoose.Schema({
   address: { type: String, required: true },
   province: { type: String, required: true },
   district: { type: String, required: true },
-  hospitalName: { type: String, required: true },
+  hospitalPin: { type: String, required: true },
   staffId: { type: String, required: true, unique: true },
   createdAt: { type: Date, default: Date.now },
   updatedAt: { type: Date, default: Date.now },

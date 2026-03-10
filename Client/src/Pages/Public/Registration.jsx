@@ -32,9 +32,10 @@ export default function Registration() {
     const [gender, setGender] = useState('');
     const [doctorLicense, setDoctorLicense] = useState('');
     const [doctorSpeciality, setDoctorSpeciality] = useState('');
-    const [doctorHospital, setDoctorHospital] = useState('');
+    const [doctorHospital, setDoctorHospital] = useState([]); // Array for multiple pins
     const [doctorPosition, setDoctorPosition] = useState('');
-    const [adminHospital, setAdminHospital] = useState('');
+    const [adminHospital, setAdminHospital] = useState(''); // Single pin
+    const [hospitals, setHospitals] = useState([]); // To store fetched list
     const [adminStaffID, setAdminStaffID] = useState('');
     const [adminRole, setAdminRole] = useState('');
     const [pharmacyName, setPharmacyName] = useState('');
@@ -49,6 +50,22 @@ export default function Registration() {
     const [loading, setLoading] = useState(false);
     const [error, setError] = useState('');
     const navigate = useNavigate();
+
+    React.useEffect(() => {
+        const fetchHospitals = async () => {
+            try {
+                const apiBaseURL = import.meta.env.VITE_API_BASE_URL;
+                const response = await fetch(`${apiBaseURL}/hospital/list`);
+                if (response.ok) {
+                    const data = await response.json();
+                    setHospitals(data.map(h => ({ value: h.PIN, label: h.Name })));
+                }
+            } catch (err) {
+                logger.error('Registration', 'Error fetching hospitals', err);
+            }
+        };
+        fetchHospitals();
+    }, []);
 
     const passwordValidations = {
         length: password.length >= 8,
@@ -99,7 +116,7 @@ export default function Registration() {
             });
         } else if (selectedRole === 'Admin') {
             Object.assign(registrationData, {
-                hospitalName: adminHospital,
+                hospitalPin: adminHospital,
                 staffId: adminStaffID,
                 RoleInHospital: adminRole
             });
@@ -459,17 +476,11 @@ export default function Registration() {
                                             <Dropdown
                                                 value={doctorHospital}
                                                 onChange={setDoctorHospital}
-                                                label="Working Hospital"
+                                                label="Working Hospital (Select Multiple)"
                                                 placeholder="Select Hospital"
-                                                options={[
-                                                    { value: 'national', label: 'National Hospital of Sri Lanka' },
-                                                    { value: 'kandy', label: 'Teaching Hospital Kandy' },
-                                                    { value: 'karapitiya', label: 'Teaching Hospital Karapitiya' },
-                                                    { value: 'lanka', label: 'Lanka Hospitals' },
-                                                    { value: 'asiri', label: 'Asiri General Hospital' },
-                                                    { value: 'nawaloka', label: 'Nawaloka Hospital' },
-                                                    { value: 'other', label: 'Other' }
-                                                ]}
+                                                multiple={true}
+                                                searchable={true}
+                                                options={hospitals}
                                             />
                                         </div>
                                         <div>
@@ -507,15 +518,8 @@ export default function Registration() {
                                             onChange={setAdminHospital}
                                             label="Hospital"
                                             placeholder="Select Hospital"
-                                            options={[
-                                                { value: 'national', label: 'National Hospital of Sri Lanka' },
-                                                { value: 'kandy', label: 'Teaching Hospital Kandy' },
-                                                { value: 'karapitiya', label: 'Teaching Hospital Karapitiya' },
-                                                { value: 'lanka', label: 'Lanka Hospitals' },
-                                                { value: 'asiri', label: 'Asiri General Hospital' },
-                                                { value: 'nawaloka', label: 'Nawaloka Hospital' },
-                                                { value: 'other', label: 'Other' }
-                                            ]}
+                                            searchable={true}
+                                            options={hospitals}
                                         />
                                     </div>
                                     <div className="grid grid-cols-1 md:grid-cols-2 gap-4">

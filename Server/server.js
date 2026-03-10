@@ -45,6 +45,9 @@ app.use('/api/admin', adminRoutes);
 const pharmacyRoutes = require('./routes/pharmacyRoutes');
 app.use('/api/pharmacy', pharmacyRoutes);
 
+const hospitalRoutes = require('./routes/hospitalRoute');
+app.use('/api/hospital', hospitalRoutes);
+
 const PORT = process.env.BACKEND_PORT;
 
 logger.info('Server', 'Starting Express server', { port: PORT });
