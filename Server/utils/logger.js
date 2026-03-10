@@ -32,10 +32,38 @@ const getCallerLocation = () => {
 };
 
 // Helper function to format log entry
-const formatLog = (level, category, message, data = null, location = null) => {
-    const timestamp = new Date().toISOString();
+const getColomboTimestamp = () => {
+    const parts = new Intl.DateTimeFormat('en-CA', {
+        timeZone: 'Asia/Colombo',
+        year: 'numeric',
+        month: '2-digit',
+        day: '2-digit',
+        hour: '2-digit',
+        minute: '2-digit',
+        second: '2-digit',
+        hour12: false
+    }).formatToParts(new Date());
+
+    const values = {};
+    for (const part of parts) {
+        if (part.type !== 'literal') {
+            values[part.type] = part.value;
+        }
+    }
+
+    return `${values.year}-${values.month}-${values.day}T${values.hour}:${values.minute}:${values.second}+05:30`;
+};
+
+const getTimestamps = () => ({
+    timestampUtc: new Date().toISOString(),
+    timestampLocal: getColomboTimestamp()
+});
+
+const formatLog = (level, category, message, data = null, location = null, timestamps = getTimestamps()) => {
+    const { timestampUtc, timestampLocal } = timestamps;
     const logEntry = {
-        timestamp,
+        timestampUtc,
+        timestampLocal,
         level,
         category,
         message,
@@ -58,54 +86,66 @@ const writeLog = (filePath, content) => {
 const logger = {
     info: (category, message, data) => {
         const location = getCallerLocation();
-        const logEntry = formatLog('INFO', category, message, data, location);
+        const timestamps = getTimestamps();
+        const { timestampLocal } = timestamps;
+        const logEntry = formatLog('INFO', category, message, data, location, timestamps);
         writeLog(generalLogPath, logEntry);
-        console.log(`[INFO] [${category}] ${message}`, data || '');
+        console.log(`[${timestampLocal}] [INFO] [${category}] ${message}`, data || '');
     },
     
     error: (category, message, error) => {
         const location = getCallerLocation();
+        const timestamps = getTimestamps();
+        const { timestampLocal } = timestamps;
         const errorData = error instanceof Error ? {
             message: error.message,
             stack: error.stack,
             name: error.name
         } : error;
-        const logEntry = formatLog('ERROR', category, message, errorData, location);
+        const logEntry = formatLog('ERROR', category, message, errorData, location, timestamps);
         writeLog(errorLogPath, logEntry);
         writeLog(generalLogPath, logEntry);
-        console.error(`[ERROR] [${category}] ${message}`, errorData);
+        console.error(`[${timestampLocal}] [ERROR] [${category}] ${message}`, errorData);
     },
     
     auth: (action, email, success, details) => {
         const location = getCallerLocation();
+        const timestamps = getTimestamps();
+        const { timestampLocal } = timestamps;
         const logEntry = formatLog('AUTH', 'Authentication', `${action} - ${email}`, {
             success,
             ...details
-        }, location);
+        }, location, timestamps);
         writeLog(authLogPath, logEntry);
         writeLog(generalLogPath, logEntry);
-        console.log(`[AUTH] ${action} - ${email}`, { success, ...details });
+        console.log(`[${timestampLocal}] [AUTH] ${action} - ${email}`, { success, ...details });
     },
     
     database: (operation, collection, details) => {
         const location = getCallerLocation();
-        const logEntry = formatLog('DATABASE', 'Database', `${operation} on ${collection}`, details, location);
+        const timestamps = getTimestamps();
+        const { timestampLocal } = timestamps;
+        const logEntry = formatLog('DATABASE', 'Database', `${operation} on ${collection}`, details, location, timestamps);
         writeLog(dbLogPath, logEntry);
-        console.log(`[DATABASE] ${operation} on ${collection}`, details || '');
+        console.log(`[${timestampLocal}] [DATABASE] ${operation} on ${collection}`, details || '');
     },
     
     warn: (category, message, data) => {
         const location = getCallerLocation();
-        const logEntry = formatLog('WARN', category, message, data, location);
+        const timestamps = getTimestamps();
+        const { timestampLocal } = timestamps;
+        const logEntry = formatLog('WARN', category, message, data, location, timestamps);
         writeLog(generalLogPath, logEntry);
-        console.warn(`[WARN] [${category}] ${message}`, data || '');
+        console.warn(`[${timestampLocal}] [WARN] [${category}] ${message}`, data || '');
     },
     
     debug: (category, message, data) => {
         const location = getCallerLocation();
-        const logEntry = formatLog('DEBUG', category, message, data, location);
+        const timestamps = getTimestamps();
+        const { timestampLocal } = timestamps;
+        const logEntry = formatLog('DEBUG', category, message, data, location, timestamps);
         writeLog(generalLogPath, logEntry);
-        console.debug(`[DEBUG] [${category}] ${message}`, data || '');
+        console.debug(`[${timestampLocal}] [DEBUG] [${category}] ${message}`, data || '');
     }
 };
 
