@@ -155,12 +155,24 @@ exports.login = async (req, res) => {
             maxAge: maxAge
         });
 
+        let isFirstLogin = false;
+        if (user.role === 'Patient') {
+            const patient = await Patient.findOne({ person_pin: user.profileId });
+            if (patient) {
+                isFirstLogin = !patient.lastLogin;
+                patient.lastLogin = Date.now();
+                await patient.save();
+                logger.info('Auth', 'Patient login timestamp updated', { email, isFirstLogin });
+            }
+        }
+
         res.json({
             message: "Login successful",
             user: {
                 email: user.email,
                 role: user.role,
-                profileId: user.profileId
+                profileId: user.profileId,
+                isFirstLogin
             }
         });
     } catch (error) {
@@ -174,11 +186,18 @@ exports.getMe = async (req, res) => {
         const user = await User.findById(req.user._id).select("-password");
         if (!user) return res.status(404).json({ message: "User not found" });
 
+        let isFirstLogin = false;
+        if (user.role === 'Patient') {
+            const patient = await Patient.findOne({ person_pin: user.profileId });
+            isFirstLogin = patient ? !patient.lastLogin : false;
+        }
+
         res.json({
             user: {
                 email: user.email,
                 role: user.role,
-                profileId: user.profileId
+                profileId: user.profileId,
+                isFirstLogin
             }
         });
     } catch (error) {

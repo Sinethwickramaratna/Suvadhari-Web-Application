@@ -44,16 +44,20 @@ export default function Login() {
             localStorage.setItem('user', JSON.stringify(data.user));
 
             // Role-based redirection
-            const roleRoutes = {
-                'Patient': '/patient-dashboard',
-                'Doctor': '/doctor-dashboard',
-                'Admin': '/admin-dashboard',
-                'Pharmacy': '/pharmacy-dashboard'
-            };
-
-            const targetRoute = roleRoutes[data.user.role] || '/dashboard';
-            logger.user('Login Redirect', { route: targetRoute });
-            navigate(targetRoute);
+            if (data.user.role === 'Patient') {
+                const target = data.user.isFirstLogin ? '/family-members' : '/patient-dashboard';
+                logger.user('Login Redirect', { route: target, firstLogin: data.user.isFirstLogin });
+                navigate(target);
+            } else {
+                const roleRoutes = {
+                    'Doctor': '/doctor-dashboard',
+                    'Admin': '/admin-dashboard',
+                    'Pharmacy': '/pharmacy-dashboard'
+                };
+                const targetRoute = roleRoutes[data.user.role] || '/dashboard';
+                logger.user('Login Redirect', { route: targetRoute });
+                navigate(targetRoute);
+            }
 
         } catch (err) {
             logger.error('Login', 'Login error', err);

@@ -1,6 +1,8 @@
 import React, { useState, useEffect } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, Link } from 'react-router-dom';
 import logger from '../../utils/logger';
+import Sidebar from '../../components/PatientPortal/Sidebar';
+import Header from '../../components/PatientPortal/Header';
 
 const PatientDashboard = () => {
     const [user, setUser] = useState(null);
@@ -52,113 +54,10 @@ const PatientDashboard = () => {
 
     return (
         <div className="flex h-auto min-h-screen w-full bg-background-light font-sans antialiased overflow-x-hidden">
-            {/* Sidebar Navigation */}
-            <aside className="w-72 bg-[#0f172a] text-white hidden lg:flex flex-col fixed inset-y-0 z-50 transition-all border-r border-white/5">
-                <div className="p-6 flex items-center gap-3">
-                    <div className="w-10 h-10 rounded-lg bg-primary flex items-center justify-center shadow-lg shadow-blue-500/20">
-                        <span className="material-symbols-outlined text-white">medical_services</span>
-                    </div>
-                    <div>
-                        <h1 className="text-xl font-bold tracking-tight">SUVADHARI</h1>
-                        <p className="text-xs text-slate-400 font-medium">Patient Portal</p>
-                    </div>
-                </div>
+            <Sidebar />
 
-                <nav className="flex-1 px-4 py-6 space-y-2 overflow-y-auto customize-scrollbar">
-                    <a className="flex items-center gap-3 px-4 py-3 rounded-xl bg-primary text-white shadow-lg shadow-blue-500/20 font-semibold" href="#">
-                        <span className="material-symbols-outlined">dashboard</span>
-                        <span className="text-sm font-semibold">Overview</span>
-                    </a>
-                    <a className="flex items-center gap-3 px-4 py-3 rounded-xl transition-all text-slate-400 hover:text-white hover:bg-white/5" href="#">
-                        <span className="material-symbols-outlined">description</span>
-                        <span className="text-sm font-medium">Medical Records</span>
-                    </a>
-                    <a className="flex items-center gap-3 px-4 py-3 rounded-xl transition-all text-slate-400 hover:text-white hover:bg-white/5" href="#">
-                        <span className="material-symbols-outlined">history</span>
-                        <span className="text-sm font-medium">My History</span>
-                    </a>
-                    <a className="flex items-center gap-3 px-4 py-3 rounded-xl transition-all text-slate-400 hover:text-white hover:bg-white/5" href="#">
-                        <span className="material-symbols-outlined">calendar_today</span>
-                        <span className="text-sm font-medium">Doctor Appointment</span>
-                    </a>
-                    <a className="flex items-center gap-3 px-4 py-3 rounded-xl transition-all text-slate-400 hover:text-white hover:bg-white/5" href="#">
-                        <span className="material-symbols-outlined">medication</span>
-                        <span className="text-sm font-medium">Pharmacy</span>
-                    </a>
-                    <a className="flex items-center gap-3 px-4 py-3 rounded-xl transition-all text-slate-400 hover:text-white hover:bg-white/5" href="#">
-                        <span className="material-symbols-outlined">verified_user</span>
-                        <span className="text-sm font-medium">Doctor Access</span>
-                    </a>
-
-                    <div className="pt-8 pb-4">
-                        <p className="px-4 text-[10px] uppercase tracking-widest text-slate-500 font-bold mb-2">Account</p>
-                        <a className="flex items-center gap-3 px-4 py-3 rounded-xl transition-all text-slate-400 hover:text-white hover:bg-white/5" href="#">
-                            <span className="material-symbols-outlined">settings</span>
-                            <span className="text-sm font-medium">Settings</span>
-                        </a>
-                    </div>
-                </nav>
-
-                <div className="p-6">
-                    <button className="w-full py-4 px-4 bg-red-600 hover:bg-red-700 rounded-2xl text-white font-bold flex items-center justify-center gap-2 transition-all active:scale-95 shadow-lg shadow-red-600/20">
-                        <span className="material-symbols-outlined">emergency</span>
-                        Emergency SOS
-                    </button>
-                </div>
-            </aside>
-
-            {/* Main Content Area */}
             <main className="flex-1 lg:ml-72 flex flex-col min-h-screen bg-[#fcfdfe] dna-bg">
-                {/* Top Bar */}
-                <header className="sticky top-0 z-40 glass-header border-b border-slate-200/50 px-8 py-4 flex items-center justify-between">
-                    <div className="relative w-96">
-                        <span className="material-symbols-outlined absolute left-3 top-1/2 -translate-y-1/2 text-slate-400">search</span>
-                        <input
-                            className="w-full bg-slate-100 border-none rounded-xl pl-10 pr-4 py-2 focus:ring-2 focus:ring-primary/20 text-sm"
-                            placeholder="Search records, doctors, or results..."
-                            type="text"
-                        />
-                    </div>
-
-                    <div className="flex items-center gap-4">
-                        <button className="w-10 h-10 flex items-center justify-center rounded-xl bg-slate-100 text-slate-600 relative">
-                            <span className="material-symbols-outlined">notifications</span>
-                            <span className="absolute top-2.5 right-2.5 w-2 h-2 bg-primary rounded-full border-2 border-white"></span>
-                        </button>
-                        <button className="w-10 h-10 flex items-center justify-center rounded-xl bg-slate-100 text-slate-600">
-                            <span className="material-symbols-outlined">chat</span>
-                        </button>
-                        <button
-                            className="w-10 h-10 flex items-center justify-center rounded-xl bg-slate-100 text-slate-600 hover:text-red-600 transition-colors"
-                            onClick={async () => {
-                                try {
-                                    logger.user('Logout', { email: user.email });
-                                    await fetch(`${import.meta.env.VITE_API_BASE_URL}/auth/logout`, {
-                                        method: 'POST',
-                                        credentials: 'include'
-                                    });
-                                } catch (err) {
-                                    logger.error('Dashboard', 'Logout failed', err);
-                                }
-                                localStorage.removeItem('user');
-                                navigate('/login');
-                            }}
-                            title="Logout"
-                        >
-                            <span className="material-symbols-outlined">logout</span>
-                        </button>
-                        <div className="h-8 w-px bg-slate-200 mx-2"></div>
-                        <div className="flex items-center gap-3">
-                            <div className="text-right">
-                                <h4 className="font-bold text-slate-900 leading-none">{healthData?.name || user.email.split('@')[0]}</h4>
-                                <p className="text-[10px] text-slate-500 font-medium uppercase tracking-wider">Patient ID: {healthData?.patientId || user.profileId || 'SV-NEW'}</p>
-                            </div>
-                            <div className="w-10 h-10 rounded-xl bg-primary/10 flex items-center justify-center ring-2 ring-primary/20">
-                                <span className="material-symbols-outlined text-primary">person</span>
-                            </div>
-                        </div>
-                    </div>
-                </header>
+                <Header user={user} healthData={healthData} />
 
                 <div className="p-8 max-w-7xl mx-auto w-full space-y-8">
                     {/* Welcome Section */}
@@ -184,12 +83,16 @@ const PatientDashboard = () => {
                     {/* Quick Action Cards */}
                     <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
                         {[
-                            { icon: 'description', label: 'Medical Records', value: '8', sub: 'Total documents stored', color: 'blue' },
-                            { icon: 'pending_actions', label: 'Pending Requests', value: '3', sub: 'Requiring attention', color: 'amber' },
-                            { icon: 'family_history', label: 'Family History', value: 'Updated', sub: '2 days ago', color: 'green' },
-                            { icon: 'person_search', label: 'Doctor Access', value: '4', sub: 'Verified practitioners', color: 'purple' }
+                            { icon: 'description', label: 'Medical Records', value: '8', sub: 'Total documents stored', color: 'blue', link: '#' },
+                            { icon: 'pending_actions', label: 'Pending Requests', value: '3', sub: 'Requiring attention', color: 'amber', link: '#' },
+                            { icon: 'family_history', label: 'Family History', value: 'Updated', sub: '2 days ago', color: 'green', link: '/family-members' },
+                            { icon: 'person_search', label: 'Doctor Access', value: '4', sub: 'Verified practitioners', color: 'purple', link: '#' }
                         ].map((card, idx) => (
-                            <div key={idx} className="bg-white p-6 rounded-3xl shadow-sm border border-slate-100 group hover:border-primary/50 transition-all cursor-pointer">
+                            <div
+                                key={idx}
+                                onClick={() => card.link !== '#' && navigate(card.link)}
+                                className="bg-white p-6 rounded-3xl shadow-sm border border-slate-100 group hover:border-primary/50 transition-all cursor-pointer"
+                            >
                                 <div className={`w-12 h-12 rounded-xl bg-${card.color}-100 text-${card.color}-600 flex items-center justify-center mb-4 group-hover:scale-110 transition-transform`}>
                                     <span className="material-symbols-outlined">{card.icon}</span>
                                 </div>

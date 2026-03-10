@@ -14,6 +14,7 @@ import RegistrationSuccess from './Pages/Public/RegistrationSuccess';
 import ResetPassword from './Pages/Public/ResetPassword';
 import ResetPasswordSuccess from './Pages/Public/ResetPasswordSuccess';
 import PatientDashboard from './Pages/PatientPortal/Dashboard';
+import FamilyMembers from './Pages/PatientPortal/FamilyMembers';
 
 function App() {
   const navigate = useNavigate();
@@ -40,7 +41,10 @@ function App() {
           const publicPaths = ['/', '/login', '/register'];
           if (publicPaths.includes(location.pathname)) {
             logger.user('Auto-redirect', { from: location.pathname, role: user.role });
-            if (user.role === 'Patient') navigate('/patient-dashboard');
+            if (user.role === 'Patient') {
+              const target = user.isFirstLogin ? '/family-members' : '/patient-dashboard';
+              navigate(target);
+            }
             else if (user.role === 'Doctor') navigate('/doctor-dashboard');
             else if (user.role === 'Admin') navigate('/admin-dashboard');
             else if (user.role === 'Pharmacy') navigate('/pharmacy-dashboard');
@@ -69,6 +73,7 @@ function App() {
       <Route path="/reset-password" element={<ResetPassword />} />
       <Route path="/reset-password-success" element={<ResetPasswordSuccess />} />
       <Route path="/patient-dashboard" element={<PatientDashboard />} />
+      <Route path="/family-members" element={<FamilyMembers />} />
     </Routes>
   );
 }
